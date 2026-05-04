@@ -1,0 +1,14 @@
+is global bug:
+Steps to Reproduce:
+1. Login to Maximo application as Agent
+2. Navigate to Service Delivery
+3. Open any ticket from My Incident section
+4. Click on Action menu button
+5. Select Global Setting option a dialog will open
+6. Check 'Is global issue' toggel button
+7. Now click on cancel button
+8. Again click on Global setting option notice that 'Is global issue'  toggle button is already checked ---Issue
+
+
+Actual Result: 'Is global' toggle button keeps the last selection even if the user cancel and didn't change the Global value
+Expected Result : If user cancel the dialog then changes done on previous should not reflect on new dialoghere are the id's i found while inspecting: w9q6wlet me know if you need any controller.js file
