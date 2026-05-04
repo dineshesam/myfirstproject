@@ -1,0 +1,2508 @@
+<!--
+*
+* CAPGEMINI_PROLOG_BEGIN_TAG
+*
+* ©Copyright 2017-2025 Capgemini Engineering ACT S.A.S.. All rights reserved.
+* CAPGEMINI_PROLOG_END_TAG
+*
+-->
+<maximo-application controller="AppController" product-name="Maximo Application Suite" title="Manage" id="servicedelivery" version="9.1.47.0">
+  <states id="aapState">
+    <state name="baseFile" value="[]" type="object" id="xxqqx"/>
+    <state name="srStatusData" value="[]" type="object" id="jv4q8"/>
+    <state name="IncidentStatusData" value="[]" type="object" id="nx856"/>
+    <state name="ProblemStatusData" value="[]" type="object" id="xq7jj"/>
+    <state name="titlepage" value="" type="string" id="avmg8"/>
+    <state name="total_incident" value="" type="string" id="p667g"/>
+  </states>
+  <json-object slot="header-configuration" id="n98da">
+    <json-property name="chatQueue" value="{app.state.chatCount}" id="dzx92"/>
+  </json-object>
+  <menu slot="header-actions" id="xjdmj">
+    <menu-item label="Chat Queue" icon="carbon:chat" on-click="agentLiveChat" name="chatQueue" on-click-arg="chatQueue" id="x3myq"/>
+  </menu>
+  <pages id="pages">
+    <page id="serviceagentdashboard" title="Service Delivery" disable-page-reload="false" controller="AgentDashboardController">
+      <header-template enable-white-background="true" stack-breadcrumbs-with-tabs="true" show-current-page-in-bread-crumb="true" hide-breadcrumb="false" bread-crumb-icon-name="home" title="Service Delivery" title-column-width="50" id="v4adx"/>
+      <states id="aq5n2">
+        <state name="dialogstate" value="[{}]" type="object" id="b9wz6"/>
+        <state name="selectedOwnedBy" value="" type="object" id="b8pva"/>
+        <state name="preSelectedOwnerType" value="" type="string" id="nbknq"/>
+        <state name="comment" value="" type="string" id="wn3kb"/>
+        <state name="isLoadFirst" value="false" type="boolean" id="mbm9y"/>
+        <state name="addCommentstate" value="" type="string" id="vnjp7"/>
+        <state name="selectedStatus" value="" type="string" id="vgw5q"/>
+        <state name="performanceObject" value="[{}]" type="object" id="kj8wb"/>
+        <state name="statusList" value="[{}]" type="object" id="jxxd9"/>
+        <state name="chartColorScale" value="{}" type="object" id="e6pna"/>
+        <state name="achivementObject" value="{}" type="object" id="gyqvg"/>
+      </states>
+      <json-datasource id="performanceObjectDS" id-attribute="_id" src="[{}]" selection-mode="none">
+        <schema id="nn_xk"/>
+      </json-datasource>
+      <maximo-datasource id="worklog" pre-load="false" object-structure="CDUIMYWORKLOG">
+        <schema id="gadzy">
+          <attribute name="*" unique-id="true" searchable="true" title=" " id="nknwe"/>
+        </schema>
+      </maximo-datasource>
+      <!-- <maximo-datasource id="allTeamTickets" include-counts="true" object-structure="CDUITICKET" page-size="1000" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING', 'incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" selection-mode="single">
+        <schema id="newbv">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="dwjnk"/>
+        </schema>
+      </maximo-datasource> -->
+      <maximo-datasource id="solutioncurweek" include-counts="true" object-structure="cduisrmsolution" extra-params="{{'gbcols':'count.*'}}" page-size="1000" saved-query="solutioncurweek" selection-mode="single">
+        <schema id="ye78g">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="deqkr"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="solutionlastweek" include-counts="true" object-structure="cduisrmsolution" extra-params="{{'gbcols':'count.*'}}" page-size="1000" saved-query="solutionlastweek" selection-mode="single">
+        <schema id="r8wzp">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="qxdak"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="myslaticketcurweek" include-counts="true" object-structure="cduimyticket" extra-params="{{'gbcols':'count.*'}}" page-size="1000" saved-query="myslaticketcurweek" selection-mode="single">
+        <schema id="qqapk">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="de2bp"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="myslaticketlastweek" include-counts="true" object-structure="cduimyticket" extra-params="{{'gbcols':'count.*'}}" page-size="1000" saved-query="myslaticketlastweek" selection-mode="single">
+        <schema id="a9jjd">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="z2jvm"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="totalticketlastweek" include-counts="true" object-structure="cduimyticket" extra-params="{{'gbcols':'count.*'}}" page-size="1000" saved-query="totalticketlastweek" selection-mode="single">
+        <schema id="mkn8r">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="vv_wp"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="totalticketcurweek" include-counts="true" object-structure="cduimyticket" extra-params="{{'gbcols':'count.*'}}" page-size="1000" saved-query="totalticketcurweek" selection-mode="single">
+        <schema id="e7gve">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="x2rg8"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="resolvedticketcurweek" include-counts="true" object-structure="cduimyticket" extra-params="{{'gbcols':'count.*'}}" page-size="1000" saved-query="resolvedticketcurweek" selection-mode="single">
+        <schema id="aqjwb">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="xvj_x"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="resolvedticketlastweek" include-counts="true" object-structure="cduimyticket" extra-params="{{'gbcols':'count.*'}}" page-size="1000" saved-query="resolvedticketlastweek" selection-mode="single">
+        <schema id="y2n9d">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="y7b7x"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="personGroupds" where="personid=&quot;{app.userInfo.personid}&quot;" object-structure="MXAPIPERSONGROUPVIEW">
+        <schema id="dm5v_">
+          <attribute name="*" id="ezebw"/>
+          <!--<attribute name="displayname" id="ag82y"/>
+            <attribute name="persongroup" id="pkm42"/>-->
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="personGroupUsersds" object-structure="MXAPIPERSONGROUPVIEW">
+        <schema id="n8e3z">
+          <attribute name="*" id="rbkre"/>
+          <!--<attribute name="displayname"/>
+            <attribute name="persongroup"/>-->
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="personticketDS" order-by="internalpriority" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" object-structure="CDUITICKET" page-size="999" selection-mode="none">
+        <schema id="j47_j">
+          <attribute name="*" sortable="true" searchable="true" id="y2n6j"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="personGrpticketDS" order-by="internalpriority" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" object-structure="CDUITICKET" page-size="999" selection-mode="none">
+        <schema id="j9ek_">
+          <attribute name="*" sortable="true" searchable="true" id="q4wm_"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="unassignedDonutTicketDS" extra-params="{{'gbcols':'count.*'}}" pre-load="true" where="owner!=&quot;*&quot;" order-by="internalpriority" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" object-structure="CDUITICKET" page-size="10" selection-mode="none">
+        <schema id="zmdnq">
+          <attribute name="*" sortable="true" searchable="true" id="epzvj"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="MyDonutTicketDS" extra-params="{{'gbcols':'count.*'}}" pre-load="true" where="owner=&quot;{app.userInfo.personid}&quot;" order-by="internalpriority" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" object-structure="CDUITICKET" page-size="10" selection-mode="none">
+        <schema id="paxk6">
+          <attribute name="*" sortable="true" searchable="true" id="exw6d"/>
+        </schema>
+      </maximo-datasource>
+      <json-datasource id="teamTicketsDS" id-attribute="_id" src="[{}]" selection-mode="none">
+        <schema id="ry6ba"/>
+      </json-datasource>
+      <maximo-datasource id="ownerDS" order-by="personid asc" pre-load="true" object-structure="CDUIUSER" selection-mode="single" saved-query="filterByPerson" saved-query-params="{{'statusList': &quot;ACTIVE&quot;} }">
+        <schema id="dq7q8">
+          <attribute name="personuid" unique-id="true" searchable="false" id="mnz3g"/>
+          <attribute name="displayname" type="STRING" searchable="true" id="q3xb5"/>
+          <attribute name="personid" title="personid" searchable="true" id="bq8xv"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="owner_groupDS" pre-load="true" order-by="persongroup asc" object-structure="CDUIGETPERSONGROUP" selection-mode="single">
+        <schema id="pvy65">
+          <attribute name="persongroupid" unique-id="true" title=" " id="azps4"/>
+          <attribute name="persongroup" type="STRING" searchable="true" id="x8b37"/>
+          <attribute name="description" id="p4adw" title="description" searchable="true"/>
+        </schema>
+      </maximo-datasource>
+      <json-datasource id="dashboardds" src="dashboard-tile.js" pre-load="false" selection-mode="none"/>
+      <json-datasource id="donutchartds" src="[{}]" id-attribute="_id" pre-load="true" selection-mode="none"/>
+      <json-datasource id="servicesBubbleDS" src="[{}]" id-attribute="_id" pre-load="false" selection-mode="none">
+        <schema id="bz3y5"/>
+      </json-datasource>
+      <dialogs id="a6e46">
+        <dialog id="changeStatus" size="sm" primary-action-text="Ok" async-primary-action="true" on-primary-action="showConfirmationDialog" secondary-action-text="Cancel" title="Change status">
+          <box direction="column" id="qwdvd">
+            <box id="k6xne">
+              <field label="Summary" value="{page.state.dialogstate.description}" show-help="false" id="w3npy"/>
+            </box>
+            <box direction="row" id="wgj9w">
+              <box id="mj_72">
+                <field label="ID" wrap="true" value="{page.state.dialogstate.ticketid}" show-help="false" id="e5rm5"/>
+              </box>
+              <box id="msp5r" direction="column">
+                <box padding-bottom="-1" id="amdaw">
+                  <field label="Status" value="{page.state.dialogstate.status}" id="m4zzd"/>
+                </box>
+              </box>
+            </box>
+            <box direction="column" id="k_n66">
+              <label label="Description" theme="field" id="eyvwb"/>
+              <box padding-top="-0.5" hidden="{!(page.state.dialogstate.description_longdescription)}" id="x4q83">
+                <rich-text-viewer stripped="true" content="{page.state.dialogstate.description_longdescription}" id="wek7a"/>
+              </box>
+              <box padding-top="-0.5" hidden="{(page.state.dialogstate.description_longdescription)}" id="vnqxy">
+                <rich-text-viewer padding-start=".5" stripped="true" content="{page.state.dialogstate.description_longdescription}" id="gmvxk"/>
+              </box>
+            </box>
+            <!-- <field label="Description" wrap="true" value="{page.state.dialogstate.description_longdescription}" show-help="false" id="mg_a3"/> -->
+            <box padding-start="-.1" direction="column" id="w8ndx">
+              <!-- Defect 133966 | System message displayed on My Tickets when maxadmin user changing status of a tickets to "Unspecified"-->
+              <dropdown hide-unselected-placeholder="true" label="Change status to" datasource="{page.state.statusList}" selected-item="{page.state.selectedStatus}" datasource-value-field="value" datasource-text-field="description" id="dgwv6"/>
+            </box>
+          </box>
+        </dialog>
+        <dialog id="addComment" on-primary-action="AddComment" async-primary-action="true" primary-action-text="Ok" on-secondary-action="resetCommentForm" on-close-action="resetCommentForm" secondary-action-text="Cancel" title="Add comment">
+          <box direction="column" id="yr8wn">
+            <box id="wqd7q">
+              <field label="Summary" value="{page.state.dialogstate.description}" show-help="false" id="g_a59"/>
+            </box>
+            <box direction="column" id="k8d7_">
+              <box direction="row" id="bakd7">
+                <box id="ggqp7">
+                  <field label="ID" value="{page.state.dialogstate.ticketid}" show-help="false" id="abr3p"/>
+                </box>
+                <box id="g3r_2" direction="column">
+                  <box padding-bottom="-0.75" id="erb_9">
+                    <field label="Status" value="{page.state.dialogstate.status}" id="kdzw4"/>
+                  </box>
+                </box>
+              </box>
+              <box direction="column" id="dvvpd">
+                <label label="Description" theme="field" id="v6zzk"/>
+                <box padding-top="-0.5" hidden="{!(page.state.dialogstate.description_longdescription)}" id="kp84_">
+                  <rich-text-viewer stripped="true" content="{page.state.dialogstate.description_longdescription}" id="k4ena"/>
+                </box>
+                <box padding-top="-0.5" hidden="{(page.state.dialogstate.description_longdescription)}" id="vmw5n">
+                  <rich-text-viewer padding-start=".5" stripped="true" content="{page.state.dialogstate.description_longdescription}" id="k2k_x"/>
+                </box>
+              </box>
+            </box>
+            <box direction="column" padding-top=".5" id="ygwnm">
+              <!-- <text-area   max-length="100" theme="dark" label="Add comment" value="{page.state.addCommentstate}" placeholder="Write your comment here." id="b745e"/> 
+              <box hidden="{page.state.isTextEmpty == true}" id="ebvy3">
+                <label label="Reason for action is required." theme="error" id="jd8p7"/>
+              </box>
+            </box> -->
+              <box id="ftrsr">
+                <text-area id="b745e" class-name="textClass" theme="dark" label="Add comment" value="{page.state.addCommentstate}" placeholder="Write your comment here." max-length="100"/>
+              </box>
+              <box padding-top="-.5" hidden="{page.state.isTextEmpty == true}" id="ebvy3">
+                <label label="Reason for action is required." theme="error" id="jd8p7"/>
+              </box>
+            </box>
+          </box>
+        </dialog>
+        <dialog id="assignTo" title="Assign to" sub-title="ID {page.state.dialogstate.ticketid}" primary-action-text="Ok" async-primary-action="true" on-primary-action="onSelectedOnwedBy" secondary-action-text="Cancel" on-secondary-action="cancelOwnerPopup" on-close-action="cancelOwnerPopup">
+          <box padding="0" border="false" fill-child="true" direction="column" id="bqbmx">
+            <box padding-start=".5" id="kr4n6">
+              <text value="Select an owner or owner group to reassign the incident" id="x__vp"/>
+            </box>
+            <tabs id="gavkm" increase-tabs-width="false">
+              <tab label="Owner" id="bv_ym">
+                <table datasource="ownerDS" can-resize="true" can-sort="true" can-search="true" can-reorder-columns="false" can-filter="false" on-empty-state-action="{app.toast('Empty table action not implemented')}" hide-empty-state-action="true" display-row-count="false" id="j375v" on-row-click="selectOwner" on-row-click-arg="{{&quot;evt&quot;:event, &quot;name&quot;: &quot;owner&quot;}}">
+                  <table-column align="start" width="150" name="personid" label="Owner ID" id="kkg3a"/>
+                  <table-column name="displayname" align="start" width="200" label="Owner name" id="yma8m"/>
+                </table>
+              </tab>
+              <tab label="Owner group" id="zbd_x">
+                <!-- <box padding-top="1.25" id="p8jqr"> -->
+                <table datasource="owner_groupDS" can-resize="true" can-reorder-columns="false" can-filter="false" on-empty-state-action="{app.toast('Empty table action not implemented')}" hide-empty-state-action="true" display-row-count="false" id="vn3k7" on-row-click="selectOwner" on-row-click-arg="{{&quot;evt&quot;:event, &quot;name&quot;: &quot;ownerGroup&quot;}}">
+                  <table-column name="persongroup" align="start" width="150" label="Group ID" id="e9374"/>
+                  <table-column name="description" align="start" width="200" label="Group name" id="nxzvd"/>
+                </table>
+                <!-- </box> -->
+              </tab>
+            </tabs>
+          </box>
+        </dialog>
+        <dialog title="Confirmation" id="closed_ticket_dialog" primary-action-text="OK" secondary-action-text="Cancel" on-primary-action="changeStatusMyTickets">
+          <box id="ym8we">
+            <rich-text-viewer content-limit="200" stripped="true" content="Changing status to CLOSE will make the incident no longer editable. Are you sure want to close incident?" id="d49bv"/>
+          </box>
+        </dialog>
+        <dialog title="Services" async-primary-action="false" async-secondary-action="false" passive="true" id="service_dialog">
+          <box direction="column" id="b29qd">
+            <box padding-top="-1.2" id="wd2dg">
+              <label label="Unresolved Incidents, Problems and Changes" id="jmmdp"/>
+            </box>
+            <table can-filter="false" datasource="servicesBubbleDS" title="" display-row-count="false" can-reorder-columns="false" can-search="true" can-page="false" id="en9qb">
+              <table-column name="serviceName" width="300" can-filter="false" can-sort="false" align="start" label="Service name" id="aj9_b">
+                <box id="nw6wd">
+                  <link label="{item.name}" on-click="servicesDetailRedirect" on-click-arg="{item}" id="y7pw_"/>
+                </box>
+              </table-column>
+              <table-column name="totalIncidentCount" can-filter="false" can-sort="false" align="start" label="Incidents" id="ay6y3">
+                <box padding-start="0.4" id="kw59w">
+                  <label label="{item.children[0].value}" id="vvaq9"/>
+                </box>
+              </table-column>
+              <table-column name="totalProblemCount" can-filter="false" can-sort="false" align="start" label="Problems" id="rzd9w">
+                <box padding-start="0.4" id="n6n8x">
+                  <label label="{item.children[2].value}" id="gjgp5"/>
+                </box>
+              </table-column>
+              <table-column name="totalSrCount" align="start" can-filter="false" can-sort="false" label="Changes" id="vzk72">
+                <box padding-start="0.4" id="mknk7">
+                  <label label="{item.children[1].value}" id="gdx3m"/>
+                </box>
+              </table-column>
+              <!-- <table-column name="totalTicketCount" label="Total" id="xv3jv">
+<box id="zmmk9">
+<label label="{item.children[3]}" id="d377_"/>
+</box>
+</table-column> -->
+            </table>
+          </box>
+        </dialog>
+      </dialogs>
+      <maximo-datasource id="cduimyticketDS1" selection-mode="none" object-structure="CDUIMYTICKET">
+        <schema id="rp2_e">
+          <attribute name="*" searchable="true" sortable="true" title="" id="q6yyg"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="cduimyticketDS2" notify-when-parent-loads="true" where="owner=&quot;{app.userInfo.personid}&quot;" saved-query="searchByStatus" pre-load="true" order-by="internalpriority" page-size="1000" selection-mode="none" object-structure="CDUIMYTICKET" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}">
+        <schema id="kanjg">
+          <!-- <attribute name="*" unique-id="true" searchable="true" title="" id="b3nyn"/> -->
+        </schema>
+      </maximo-datasource>
+      <json-datasource id="modifiedMyTicketDS" id-attribute="_id" src="[{}]" depends-on="cduimyticketDS2" selection-mode="none">
+        <schema id="yr975">
+          <attribute name="status" searchable="true" sortable="true" title="Status" id="bbz_9"/>
+          <attribute name="ticketid" searchable="true" sortable="true" title="Incident Id" id="bg_2e"/>
+          <attribute name="description" searchable="true" sortable="true" title="Description" id="mkg46"/>
+          <attribute name="description_longdescription" searchable="false" sortable="false" title="Long Description" id="xaqym"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="kp6je"/>
+          <attribute name="internalpriority_description" searchable="true" sortable="true" title="Priority" id="bmzb6"/>
+          <!-- <attribute name="priority" searchable="true" sortable="true" title="priority" id="xz4bx"/> -->
+          <attribute name="changedate" searchable="true" sortable="true" title="Last updated" id="mqyg_"/>
+          <attribute name="latestActivity" searchable="true" sortable="true" title="Latest activity" id="rd4p_"/>
+          <attribute name="slaDueAt" searchable="true" sortable="true" title="SLA due at" id="a7bqb"/>
+          <attribute name="slaAction" searchable="true" sortable="true" title="SLA action" id="x7x4w"/>
+          <attribute name="ticketuid" searchable="true" sortable="true" title="ticketuid" id="g57yp"/>
+          <attribute name="class_maxvalue" searchable="true" sortable="true" title="class_maxvalue" id="abjk7"/>
+        </schema>
+      </json-datasource>
+      <json-datasource id="commentDS" src="[{}]" selection-mode="none">
+        <schema id="xbev9">
+          <attribute name="ticketid" searchable="true" sortable="true" title="Incident ID" id="mmknr"/>
+          <attribute name="description" searchable="true" sortable="true" title="Description" id="a6v5k"/>
+          <attribute name="status" searchable="true" sortable="true" title="status" id="j9ngn"/>
+        </schema>
+      </json-datasource>
+      <box class-name="tableHeader" direction="column" id="pgnkm">
+        <table title="My incidents" no-data-message="No data found" fill-parent="true" row-height="compact" can-resize="true" on-row-click="clickevent" display-row-count="false" can-filter="false" can-reorder-columns="false" rows-per-page="5" datasource="modifiedMyTicketDS" can-search="false" id="bbwgd">
+          <!-- <label label="My Tickets" theme="header-x-small" tooltip-text="My Tickets Table" id="w63ky"/> -->
+          <!-- <table title="My incidents" no-data-message="No data found" fill-parent="true" row-height="compact" can-resize="true" on-row-click="clickevent" display-row-count="false" can-filter="false" can-reorder-columns="false" rows-per-page="5" datasource="modifiedMyTicketDS" can-search="false" id="rx_d_d7"> -->
+          <table-column name="ticketid" align="start" width="90" label="ID" id="p4gxw">
+            <box id="r8g89" padding="0">
+              <link on-click="goToDetails" on-click-arg="{item}" label="{item.ticketid}" id="banyb"/>
+            </box>
+          </table-column>
+          <table-column name="description" align="start" width="220" label="Summary" id="ymbmm">
+            <box id="x64e8" padding="0">
+              <label label="{item.description}" id="w4vx5" spacing="none"/>
+            </box>
+          </table-column>
+          <table-column name="internalpriority_description" width="110" align="start" label="Priority" id="jx_a5">
+            <box id="g85ax" padding="0">
+              <label label="{item.internalpriority_description}" spacing="none" id="qyj8e"/>
+            </box>
+          </table-column>
+          <table-column name="changedate" align="start" width="140" label="Last updated" id="axmgy">
+            <box hidden="{!(item.changedateType === 1)}" id="aj4zn">
+              <!--<date-relative value="{item.changedate.value}" spacing="form" padding="none" type="date_full_day" id="gede8"/>-->
+              <label label="{item.changedate}" spacing="none" padding="none" id="gede8"/>
+            </box>
+            <box hidden="{!(item.changedateType === 2)}" class-name="customDateFont" id="agzmm">
+              <!--<field id="j3yyz" value="{[{'value': item.changedate, 'type': 'date'}]}"/>-->
+              <!--<field id="jwz43" field-class-name="14-regular">
+                <sub-field value="{item.changedate.value}" type="date" id="m6qz3"/>
+              </field>-->
+              <label label="{item.changedate}" spacing="none" padding="none" id="ddwyx"/>
+            </box>
+          </table-column>
+          <table-column name="latestActivity" align="start" width="173" label="Latest activity" id="ax2ax">
+            <box id="y6e3g">
+              <label label="{item.latestActivity}" spacing="none" id="a49b5"/>
+            </box>
+          </table-column>
+          <table-column name="slaDueAt" align="start" width="135" label="SLA due at" id="k2rd7">
+            <box hidden="{(item.slaDuetype != 1)}" id="x7qka">
+              <icon-group primary-icon="carbon:warning--alt--filled" error-theme="default" primary-icon-color="#DA1E28" padding="false" error-label-align="start" error-label="{item.slaDueAt}" label="{item.slaDueAt}" has-error="false" id="mob4q6"/>
+            </box>
+            <box hidden="{(item.slaDuetype != 2)}" id="dqmvy">
+              <icon-group primary-icon="carbon:time" error-theme="default" primary-icon-color="#FFC107" padding="false" warning-label-align="start" warning-label="{item.slaDueAt}" label="{item.slaDueAt}" has-warning="false" id="nznzw"/>
+            </box>
+            <box hidden="{(item.slaDuetype != 3)}" id="z3mwn">
+              <!--<field  value="{[{'value': item.slaDueAt ? item.slaDueAt.value : '', 'type': 'datetime'}]}" id="zkz_m"/>-->
+              <label label="{item.slaDueAt ? item.slaDueAt : ''}" spacing="none" padding="none" id="ready"/>
+            </box>
+            <box hidden="{(item.slaDuetype != 4)}" id="qpywb">
+              <label label="-" id="mvpb6"/>
+            </box>
+          </table-column>
+          <table-column name="slaAction" align="start" width="135" label="SLA action" id="we7y7">
+            <box id="dxpkg" padding="0">
+              <label label="{item.slaAction}" spacing="none" id="r4krz"/>
+            </box>
+          </table-column>
+          <table-column name="status" align="start" width="120" label="Status" id="v85zp">
+            <box padding="0" id="d9kv7">
+              <label label="{item.status}" spacing="none" id="ekra3"/>
+            </box>
+          </table-column>
+          <!-- <row-actions id="n9n4g">
+                <row-action on-action="changeStatus" label="Change Status" overflow="true" id="yg2yy"/>
+                <row-action on-action="addComment" label="Add Comment" overflow="true" id="kva32"/>
+                <row-action on-action="assignTo" label="Assign To" overflow="true" id="ydrde"/>
+              </row-actions> -->
+          <table-column name="" label=" " align="start" width="50" can-filter="false" can-sort="false" id="vdjm6">
+            <box id="dazy4" fill-parent="true" padding-top="-0.25" padding-bottom="-0.25">
+              <menu-button kind="ghost" id="menubutton2" class-name="dotpadding" icon="carbon:overflow-menu--vertical" label="" icon-position="start">
+                <menu-item on-click="addComment" label="Add comment" id="mnd3d"/>
+                <menu-item id="dp4qw" on-click="changeStatus" on-click-arg="{item}" label="Change status"/>
+                <menu-item on-click="assignTo" label="Reassign" id="myp37"/>
+                <menu-item on-click="loadApp" on-click-arg="{{appName: item.class_maxvalue, context:{uniqueid: item.ticketuid}, options:{embedded:true}}}" label="View source record" id="b5y9d"/>
+              </menu-button>
+            </box>
+          </table-column>
+        </table>
+        <!-- <box id="m2ezn" manage-children="true" children-sizes="39.5,39.5"> -->
+        <box id="p9r4w" class-name="chartContainer" padding-top="0.5" padding-bottom="0.5" children-sizes="37.3,37.3">
+          <!-- <box fill-parent="true" vertical-align="center" horizontal-align="center" manage-children="true" background-color="ui-01" size="100" direction="column" id="jxxbw">
+                <label label="Tickets" tooltip-text="tootltip" theme="header-x-small" id="vv44k" />
+                <chart type="donut" datasource="salesds3" height="340" id="wjxz3">
+                  <chart-option name="data.groupMapsTo" value="ticket_status" id="dn3zv" />
+                  <chart-option name="data.valueMapsTo" value="total_tickets" id="jdreq" />
+                  <chart-option name="donut.center.label" value="total_tickets" id="dvwn4" />
+                  <chart-option name="alignment" value="center" id="dekq9" />
+                  <chart-option name="animations" value="cenfalseter" id="wa8y4" />
+                  <chart-option name="accessibility" value="false" id="a23g8" />
+                  <chart-toolbar enabled="false" id="k6vqy" />
+                  <chart-option name="color" value="{{scale: {'Unassigned Tickets': '#1192E8', 'My Ticket': '#198038', 'Tickets Open With My
+              Team': '#6929C4'}}}" id="xvwx7" />
+                  <chart-legend position="bottom" alignment="center" id="vw8jv" />
+                </chart> -->
+          <box fill-parent="true" border="true" vertical-align="center" manage-children="true" fill-child="true" horizontal-align="center" background-color="ui-01" direction="column" id="a7_2r">
+            <box id="dnb7d" children-sizes="99,1">
+              <box id="b4ymq">
+                <label label="Services with issues" theme="header-x-small" id="pvmjn"/>
+              </box>
+              <box padding-end="-.5" padding-top="-.5" id="qkdr3">
+                <button icon="carbon:list" on-click="bubblecharttable" icon-placement="end" id="yrebw"/>
+              </box>
+            </box>
+            <chart type="circle-pack" datasource="servicesBubbleDS" height="337" on-segment-click="bubbleChartClick" on-segment-click-arg="{event}" id="k64q6">
+              <chart-option name="circlePack" value="{{depth: 2}}" id="wvb7k"/>
+              <chart-option name="data.groupMapsTo" value="name" id="z28qj"/>
+              <chart-option name="data.valueMapsTo" value="value" id="kkq68"/>
+              <chart-option name="alignment" value="center" id="mkrzd"/>
+              <chart-option name="animations" value="cenfalseter" id="j524p"/>
+              <chart-option name="accessibility" value="false" id="bkeg7"/>
+              <chart-toolbar enabled="false" types="SHOW_AS_DATATABLE" id="zavey"/>
+              <chart-option name="color.scale" value="{page.state.chartColorScale}" id="eqjzv"/>
+              <chart-legend position="bottom" alignment="start" id="qdx74"/>
+            </chart>
+            <!--<table can-filter="false" datasource="servicesBubbleDS" title="" display-row-count="false" can-reorder-columns="false" can-search="false" rows-per-page="5" id="en9qb">
+              <table-column name="serviceName" label="Service Name" id="aj9_b">
+                <box id="nw6wd">
+                  <link label="{item.serviceName}" on-click="servicesDetailRedirect" on-click-arg="{item}" id="y7pw_"/>
+                </box>
+              </table-column>
+              <table-column name="totalIncidentCount" label="Incident" id="ay6y3">
+                <box id="kw59w">
+                  <label label="{item.totalIncidentCount}" id="vvaq9"/>
+                </box>
+              </table-column>
+              <table-column name="totalProblemCount" label="Problem" id="rzd9w">
+                <box id="n6n8x">
+                  <label label="{item.totalProblemCount}" id="gjgp5"/>
+                </box>
+              </table-column>
+              <table-column name="totalSrCount" label="Service request" id="vzk72">
+                <box id="mknk7">
+                  <label label="{item.totalSrCount}" id="gdx3m"/>
+                </box>
+              </table-column>
+              <table-column name="totalTicketCount" label="Total" id="xv3jv">
+                <box id="zmmk9">
+                  <label label="{item.totalTicketCount}" id="d377_"/>
+                </box>
+              </table-column>
+            </table>-->
+          </box>
+          <box class-name="donutChart" fill-parent="true" border="true" vertical-align="center" manage-children="true" fill-child="true" padding-start="1" horizontal-align="center" background-color="ui-01" direction="column" id="v4636">
+            <!-- <box id="med7b"> -->
+            <!-- <box id="r7g6y" padding-start="0.5" fill-parent="true" border="true" vertical-align="center" manage-children="true" fill-child="true" horizontal-align="center" background-color="ui-01" direction="column"> -->
+            <box id="med7b">
+              <label label="Incidents" theme="header-x-small" id="epvp5"/>
+            </box>
+            <chart type="donut" datasource="donutchartds" height="350" on-segment-click="chartClick" on-segment-click-arg="{event}" id="ydj9x">
+              <chart-option name="data.groupMapsTo" value="ticket_status" id="k57_p"/>
+              <chart-option name="data.valueMapsTo" value="total_tickets" id="gxxss2j"/>
+              <chart-option name="donut.center.label" value="{page.state.total_incident}" id="ssewak7"/>
+              <chart-option name="alignment" value="center" id="uua9ga"/>
+              <chart-option name="animations" value="cenfalseter" id="uua93a"/>
+              <chart-option name="accessibility" value="false" id="s8ua9ga"/>
+              <chart-toolbar enabled="false" id="naa3w2y3"/>
+              <chart-option name="color.scale" value="{page.state.chartColorScaledonut}" id="k7875"/>
+              <chart-legend id="m6gwek" position="bottom" alignment="start"/>
+            </chart>
+          </box>
+        </box>
+        <label label="My Achievements" theme="header-small" id="n9e7q"/>
+        <box id="gpzgb" padding-bottom="1" padding-start=".5">
+          <!-- <accordion id="ekm59">
+            <accordion-item title="My Achievements" class-name="achivementpad" open="true" id="ga6ev"> -->
+          <dashboard id="ma89_">
+            <dashboard-value-tile size="small" tooltip="Incidents resolved by logged in user this week" secondary-value-field="{page.state.performanceObject.SinceLastWeekPercent != '0' ? page.state.performanceObject.SinceLastWeekPercentPositive + page.state.achivementObject.since_last_week : page.state.achivementObject.no_change}" trend-direction="{page.state.performanceObject.SinceLastWeekPercent != '0' ? (page.state.performanceObject.SinceLastWeekPercent >= 0 ? 'up' : 'down') : ''}" trend-color="{page.state.performanceObject.SinceLastWeekPercent >= 0 ? 'green' : 'red'}" datasource="performanceObjectDS" title="Incidents resolved" value-field="ticketResolvedCurweekCount" unit="" id="g4k42"/>
+            <dashboard-value-tile size="small" tooltip="Solutions created by logged in user this week" secondary-value-field="{page.state.performanceObject.solutionsSinceLastWeekPercent != '0' ? page.state.performanceObject.solutionsSinceLastWeekPercentPositive + page.state.achivementObject.since_last_week : page.state.achivementObject.no_change}" datasource="performanceObjectDS" title="Solutions created" value-field="solutionsCount" unit="" trend-direction="{page.state.performanceObject.solutionsSinceLastWeekPercent != '0' ? (page.state.performanceObject.solutionsSinceLastWeekPercent >= 0 ? 'up' : 'down') : ''}" trend-color="{page.state.performanceObject.solutionsSinceLastWeekPercent >= 0 ? 'green' : 'red'}" id="j2ax5"/>
+            <dashboard-value-tile size="small" tooltip="Metric indicating SLA Compliance for incidents assigned to logged in user" secondary-value-field="{page.state.performanceObject.SLASinceLastWeekPercent != '0' ? page.state.performanceObject.SLASinceLastWeekPercentPositive + page.state.achivementObject.since_last_week : page.state.achivementObject.no_change}" datasource="performanceObjectDS" title="SLA performance" value-field="slaPerformanceCurWeekPercent" unit="{page.state.performanceObject.slaPerformanceCurWeekPercent != '0' ? '%' : '%'}" id="wa246_" trend-direction="{page.state.performanceObject.SLASinceLastWeekPercent != '0' ? (page.state.performanceObject.SLASinceLastWeekPercent >= 0 ? 'up' : 'down') : ''}" trend-color="{page.state.performanceObject.SLASinceLastWeekPercent >= 0 ? 'green' : 'red'}"/>
+          </dashboard>
+          <!-- </accordion-item>
+          </accordion> -->
+        </box>
+      </box>
+    </page>
+    <page id="tickets" controller="TicketController">
+      <states id="x947_">
+        <state name="tableButton" value="true" type="boolean" id="jpdmz"/>
+        <state name="panelIndex" value="1" type="number" id="ng2qz"/>
+        <state name="tabIndex" type="number" id="r93n_"/>
+        <state name="myTicketCount" type="number" id="e2zmr"/>
+        <state name="unassignedTicketsCount" type="number" id="eqzzg"/>
+        <state name="ticketsOpenWithMyTeamCount" type="number" id="mr72r"/>
+        <state name="isLoadFirst" type="boolean" value="false" id="nr64y"/>
+      </states>
+      <maximo-datasource id="ticketsPersonGroupds" where="personid=&quot;{app.userInfo.personid}&quot;" object-structure="MXAPIPERSONGROUPVIEW">
+        <schema id="w78z_">
+          <attribute name="*" id="qkb3a"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="ticketsPersonGroupUsersds" object-structure="MXAPIPERSONGROUPVIEW">
+        <schema id="vbpvv">
+          <attribute name="*" id="w_gek"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="ticketsPersonticketDS" order-by="internalpriority" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" object-structure="CDUITICKET" page-size="999" selection-mode="none">
+        <schema id="d95vr">
+          <attribute name="*" sortable="true" searchable="true" id="qzemg"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="ticketsPersonGrpticketDS" order-by="internalpriority" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" object-structure="CDUITICKET" page-size="999" selection-mode="none">
+        <schema id="yd75v">
+          <attribute name="*" sortable="true" searchable="true" id="qvapa"/>
+        </schema>
+      </maximo-datasource>
+      <json-datasource id="ticketsTeamTicketsDS" pre-load="true" id-attribute="_id" src="[{}]" selection-mode="none">
+        <schema id="kw9m2">
+          <attribute name="description" sortable="true" searchable="true" title="Summary" id="qxgg7"/>
+          <attribute name="ticketid" sortable="true" searchable="true" title="ID" id="jw5e6"/>
+          <attribute name="owner" sortable="true" searchable="true" title="Owned by" id="px7kx"/>
+          <attribute name="description_longdescription" sortable="false" searchable="true" title="Description" id="q3rjw"/>
+          <attribute name="status" sortable="true" searchable="true" title="Status" id="ade63"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="vxw49"/>
+          <attribute name="internalpriority_description" sortable="false" searchable="false" title="Priority" id="wrqva"/>
+          <attribute name="changedate" sortable="true" searchable="true" sub-type="DATE" title="Last update" id="e3v5b"/>
+          <attribute name="targetfinish" sortable="true" searchable="true" sub-type="DATE" title="Due date" id="nybg7"/>
+          <attribute name="ticketuid" sortable="false" searchable="false" title="ticketuid" id="wgmyp"/>
+          <attribute name="class_maxvalue" sortable="false" searchable="false" title="class_maxvalue" id="jea6y"/>
+        </schema>
+      </json-datasource>
+      <maximo-datasource id="TicketsOpenWithMyTeam" object-structure="CDUIMYTICKET" page-size="1000" selection-mode="single">
+        <schema id="dkgya">
+          <attribute name="*" unique-id="true" searchable="false" title="" id="yndn2"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="unassignedticketds" pre-load="true" where="owner!=&quot;*&quot;" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" object-structure="CDUITICKET" selection-mode="none">
+        <schema id="ngzrv">
+          <attribute name="description" sortable="true" searchable="true" title="Summary" id="a2jby"/>
+          <attribute name="ticketid" sortable="true" searchable="true" title="ID" id="zj6w9"/>
+          <attribute name="description_longdescription" sortable="false" searchable="true" title="Description" id="j85br"/>
+          <attribute name="status" sortable="true" searchable="true" title="Status" id="vgy4n"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="dbgpd"/>
+          <attribute name="internalpriority_description" sortable="false" searchable="false" title="Priority" id="bax2x"/>
+          <attribute name="changedate" sortable="true" searchable="true" sub-type="DATE" title="Last update" id="eda4a"/>
+          <attribute name="targetfinish" sortable="true" searchable="true" sub-type="DATE" title="Due date" id="p8mgb"/>
+          <attribute name="ticketuid" sortable="false" searchable="false" title="ticketuid" id="me2ma"/>
+          <attribute name="class" searchable="false" sortable="false" title="class" id="zyr3x"/>
+          <attribute name="class_maxvalue" sortable="false" searchable="false" title="class_maxvalue" id="yep7j"/>
+        </schema>
+      </maximo-datasource>
+      <json-datasource id="AISuggestedTicketsDS" id-attribute="_id" src="[{}]" selection-mode="none" page-size="4">
+        <schema id="kpwmb">
+          <attribute name="description" sortable="true" searchable="true" title="Title" id="r4vz5"/>
+          <attribute name="ticketid" sortable="true" searchable="true" title="ID" id="z6vpk"/>
+          <attribute name="owner" sortable="true" searchable="true" title="Owned by" id="kzrby"/>
+          <attribute name="description_longdescription" sortable="true" searchable="true" sub-type="UPPER" title="Description" id="d_da8"/>
+          <attribute name="status" sortable="true" searchable="true" title="Status" id="jp48b"/>
+          <attribute name="internalpriority_description" sortable="true" searchable="true" title="Priority" id="jbera"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="pwk3a"/>
+          <attribute name="changedate" sortable="true" searchable="true" sub-type="DATE" title="Last update" id="zy8vk"/>
+          <attribute name="targetfinish" sortable="true" searchable="true" sub-type="DATE" title="Due date" id="kmmn4"/>
+          <attribute name="class" searchable="false" sortable="false" title="class" id="bydrn"/>
+          <attribute name="ticketuid" sortable="false" searchable="false" title="ticketuid" id="m2vkk"/>
+          <attribute name="class_maxvalue" sortable="false" searchable="false" title="class_maxvalue" id="vz3jq"/>
+        </schema>
+      </json-datasource>
+      <maximo-datasource id="MyticketDS" pre-load="true" where="owner=&quot;{app.userInfo.personid}&quot;" saved-query="searchByStatus" saved-query-params="{{'srstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','incstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING','prstatus':'NEW,APPR,APPFM,APPLM,QUEUED,INPROG,PENDING'}}" object-structure="CDUITICKET" page-size="10" selection-mode="none">
+        <schema id="ep52k">
+          <!-- <attribute name="*" sortable="true" searchable="true" id="d7xkv"/> -->
+          <attribute name="description_longdescription" searchable="true" sortable="false" title="Description" id="p3d7q"/>
+          <attribute name="ticketid" searchable="true" sortable="true" title="ID" id="d7xkv"/>
+          <attribute name="description" searchable="true" sortable="true" title="Summary" id="wak2x"/>
+          <attribute name="status" searchable="true" sortable="true" title="Status" id="p855d"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="g43q5"/>
+          <attribute name="internalpriority_description" sortable="false" searchable="false" title="Priority" id="n3b7b"/>
+          <attribute name="targetfinish" searchable="true" sortable="true" title="Due date" sub-type="DATE" id="aweq2"/>
+          <attribute name="changedate" searchable="true" sortable="true" title="Last update" sub-type="DATE" id="qbv46"/>
+          <attribute name="ticketuid" searchable="false" sortable="false" title="ticketuid" id="nx4kb"/>
+          <attribute name="class" searchable="false" sortable="false" title="class" id="bm2pw"/>
+          <attribute name="class_maxvalue" searchable="false" sortable="false" title="class_maxvalue" id="eg56g"/>
+        </schema>
+      </maximo-datasource>
+      <header-template enable-white-background="true" stack-breadcrumbs-with-tabs="true" show-current-page-in-bread-crumb="true" hide-breadcrumb="false" title="Incidents" id="ab3pp">
+        <tabs slot="tabs" class-name="spaceheader" selected="{page.state.tabIndex}" increase-tabs-width="true" id="qqe_6">
+          <tab on-click="setTitle" on-click-arg="{page.state.myTicketCount}" label="{page.state.myTicketCount + ' (' + MyticketDS.state.totalCount + ')'}" id="avag7">
+            <box id="rn8an" padding-top="1">
+              <card-group datasource="MyticketDS" card-width="600" id="q79jb" hide-count-search="true" show-refresh="true" can-search="true" on-panel-changed="onPanelChanged" on-panel-changed-arg="{event}" panel-index="{page.state.panelIndex}">
+                <card slot="item" on-click="goToDetails" id="vrmx2">
+                  <box class-name="pointerdefault" min-width="120%" direction="column" children-hide-overflow="true" id="b8v34">
+                    <box id="y4_7j" direction="column" vertical-overflow="hidden">
+                      <field padding="none" label=" " class-name="cardfieldfont" hide-label="true" value="{item.description}" id="yvvp6"/>
+                      <field label="ID" class-name="cardticketfont" values-top-padding="true" padding="none" value="{item.ticketid}" label-placement="start" show-help="false" id="jm3r8"/>
+                    </box>
+                    <box id="aabya" direction="column" padding-top="0.5" class-name="setminheight">
+                      <label label="Description" padding="none" theme="field" id="x_pm7"/>
+                      <rich-text-viewer content-limit="50" padding-top="-0.5" padding-start="0.5" stripped="true" content="{item.description_longdescription}" id="mrzkv"/>
+                    </box>
+                    <box id="w3d99" children-sizes="50,50" manage-children="true">
+                      <box direction="column" id="xvqd6">
+                        <field label="Status" show-help="false" class-name="status-field" value="{item.status}" id="bmrqx"/>
+                      </box>
+                      <box direction="column" id="rp5ad">
+                        <field label="Priority" show-help="false" class-name="status-field" value="{item.internalpriority_description}" id="p8w8p"/>
+                        <!-- <field label="Priority" show-help="false" class-name="status-field" value="{item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (item.internalpriority== 1) ? (app.state.priority_data['1'].description): (item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="p8w8p"/> -->
+                      </box>
+                    </box>
+                    <box fill-parent="true" size="100" children-sizes="50,50" manage-children="false" id="qq4ed">
+                      <box min-width="50%" id="dw8j4">
+                        <field label="Last update" show-help="false" id="dpx74">
+                          <sub-field value="{item.changedate}" type="date" id="kg4va"/>
+                        </field>
+                      </box>
+                      <box min-width="50%" id="nb_jm">
+                        <field label="Due date" show-help="false" id="yvrn6">
+                          <sub-field value="{item.targetfinish}" type="date" id="aj5gd"/>
+                        </field>
+                      </box>
+                    </box>
+                  </box>
+                </card>
+                <table slot="table" no-data-message="No data found" has-batch-action-toolbar="false" can-reorder-columns="true" display-row-count="false" id="incidenttable">
+                  <view-manager for-table="incidenttable" selected-item="{app.state.defaultView}" auto-save="false" id="jb4e6"/>
+                  <table-column name="ticketid" width="107" label="ID" placeholder-text="ID" id="jpny9">
+                    <box id="e98we">
+                      <link on-click="goToDetails" on-click-arg="{item}" label="{item.ticketid}" id="bgg82"/>
+                    </box>
+                  </table-column>
+                  <table-column name="description" width="195" label="Summary" placeholder-text="Summary" id="kg6m9">
+                    <box class-name="fieldpadding" id="v856v">
+                      <label label="{item.description ? item.description : '-'}" id="pbvbk"/>
+                    </box>
+                  </table-column>
+                  <table-column name="status" width="140" label="Status" placeholder-text="Status" id="ar5zq">
+                    <box class-name="fieldpadding" id="rq5rq">
+                      <label label="{item.status ? item.status : '-'}" id="armz3"/>
+                    </box>
+                  </table-column>
+                  <!-- <table-column name="internalpriority" align="start" can-filter="true" width="120" label="Priority" placeholder-text="Priority" id="gnj3y">
+                    <box id="nkkyr"> -->
+                  <table-column can-sort="false" can-filter="false" name="internalpriority_description" width="120" label="Priority" placeholder-text="Priority" id="gnj3y">
+                    <box id="nkkyr">
+                      <label label="{item.internalpriority_description  ? item.internalpriority_description : '-'}" spacing="none" id="bk58w"/>
+                      <!-- <label label="{item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (item.internalpriority== 1) ? (app.state.priority_data['1'].description): (item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" spacing="none" id="bk58w"/> -->
+                    </box>
+                  </table-column>
+                  <table-column name="targetfinish" width="140" label="Due date" placeholder-text="Due date" id="pxmvm">
+                    <box class-name="fieldpadding" id="e3zxe">
+                      <label label="{item.targetfinish  ? item.targetfinish : '-'}" id="rpn_z"/>
+                    </box>
+                  </table-column>
+                  <table-column name="changedate" width="140" label="Last update" placeholder-text="Last update" id="e537x">
+                    <box class-name="fieldpadding" id="xg93e">
+                      <label label="{item.changedate  ? item.changedate : '-'}" id="mvjga"/>
+                    </box>
+                  </table-column>
+                  <table-column can-sort="false" name="description_longdescription" label="Description" placeholder-text="Description" id="qbe46">
+                    <box class-name="fieldpadding" id="qqmjj">
+                      <label label="{item.description_longdescription ? item.description_longdescription : '-'}" stripped="true" id="a32yb"/>
+                    </box>
+                  </table-column>
+                  <!-- <row-actions id="wb7ne">
+                    <row-action on-action="deleteAction" on-action-arg="{{'force': true, 'action': event}}" label="Delete" icon="carbon:close" overflow="false" id="a2mry"/>
+                    <row-action on-action="{app.toast(`Copy Action ${event.item._id}`)}" label="Copy" icon="carbon:add" overflow="true" id="w5zeg"/>
+                    <row-action on-action="{app.toast(`Info Action ${event.item._id}`)}" label="Info" icon="carbon:help" overflow="false" id="gp7_v"/>
+                  </row-actions> -->
+                </table>
+              </card-group>
+            </box>
+          </tab>
+          <tab on-click="setTitle" on-click-arg="{page.state.ticketsOpenWithMyTeamCount}" label="{page.state.ticketsOpenWithMyTeamCount + ' (' + ticketsTeamTicketsDS.state.totalCount + ')'}" id="vyp2g">
+            <!--<box hidden="{!app.state.aiEnable}" id="e2pen">
+              <accordion id="gvx6x">
+                <accordion-item class-name="accordianText" title="AI Recommendations for You" open="true" id="jp422">
+                  <label padding="none" label="AI recommended incidents based on your role(s)" id="nz4p7"/>
+                  <card-group datasource="AISuggestedTicketsDS" card-width="600" card-height-hint="300" hide-count-search="true" show-refresh="true" can-search="false" can-sort="false" id="jx6ww">
+                    <card slot="item" on-click="goToDetails" id="be5ge">
+                      <box class-name="pointerdefault" direction="column" min-width="120%" children-hide-overflow="true" id="z7gjw">
+                        <box direction="column" vertical-overflow="hidden" id="w38nw">
+                          <field padding="none" label=" " class-name="cardfieldfont" hide-label="true" value="{item.description}" id="bmapx"/>
+                          <field label="ID" class-name="cardticketfont" padding="none" value="{item.ticketid}" label-placement="start" show-help="false" id="e3aq4"/>
+                        </box>
+                        <box direction="column" padding-top="0.5" class-name="setminheight" id="yeb2y">
+                          <label label="Description" padding="none" theme="field" id="zxrk4"/>
+                          <rich-text-viewer content-limit="50" padding-top="-0.5" padding-start="0.5" stripped="true" content="{item.description_longdescription}" id="ggamy"/>
+                        </box>
+                        <box children-sizes="50,50" manage-children="true" id="bw2v4">
+                          <box direction="column" id="nn9ym">
+                            <field label="Status" show-help="false" class-name="status-field" value="{item.status}" id="dykgk"/>
+                          </box>
+                          <box direction="column" id="ajpej">
+                            <field label="Priority" show-help="false" class-name="status-field" value="{item.internalpriority_description}" id="jnwa3"/>
+                          </box>
+                        </box>
+                        <box id="p5e86">
+                          <field label="Owned By" show-help="false" value="{item.owner}" id="q9y2k"/>
+                        </box>
+                        <adaptive-row id="mg_q4">
+                          <adaptive-column large-width="50" id="ppapv">
+                            <field label="Last Update" show-help="false" id="e97a4">
+                              <sub-field value="{item.changedate}" type="date" id="d4x9z"/>
+                            </field>
+                          </adaptive-column>
+                          <adaptive-column max-width="50" max-horizontal-align="end" id="pkg8r">
+                            <field label="Due Date" show-help="false" id="mwrkr">
+                              <sub-field value="{item.targetfinish}" type="date" id="r2_7x"/>
+                            </field>
+                          </adaptive-column>
+                        </adaptive-row>
+                      </box>
+                    </card>
+                  </card-group>
+                </accordion-item>
+              </accordion>
+            </box>-->
+            <box id="m6_38" padding-top="1">
+              <card-group datasource="ticketsTeamTicketsDS" card-width="600" card-height-hint="300" hide-count-search="true" show-refresh="true" can-search="true" on-panel-changed="onPanelChanged" on-panel-changed-arg="{event}" panel-index="{page.state.panelIndex}" id="qkjqk">
+                <card slot="item" on-click="goToDetails" id="q36r7">
+                  <box class-name="pointerdefault" direction="column" min-width="120%" children-hide-overflow="true" id="nygnm">
+                    <box id="aee68" direction="column" vertical-overflow="hidden">
+                      <field padding="none" label=" " class-name="cardfieldfont" hide-label="true" value="{item.description}" id="jgyke"/>
+                      <field label="ID" class-name="cardticketfont" padding="none" value="{item.ticketid}" label-placement="start" show-help="false" id="p9jb3"/>
+                    </box>
+                    <box id="kx7q7" direction="column" padding-top="0.5" class-name="setminheight">
+                      <label label="Description" padding="none" theme="field" id="qqd_a"/>
+                      <rich-text-viewer content-limit="50" padding-top="-0.5" padding-start="0.5" stripped="true" content="{item.description_longdescription}" id="rwd_9"/>
+                    </box>
+                    <box id="x2w_6" children-sizes="50,50" manage-children="true">
+                      <box direction="column" id="m7849">
+                        <field label="Status" show-help="false" class-name="status-field" value="{item.status}" id="j5v64"/>
+                      </box>
+                      <box direction="column" id="x5z93">
+                        <field label="Priority" show-help="false" class-name="status-field" value="{item.internalpriority_description}" id="g8zyq"/>
+                      </box>
+                    </box>
+                    <box id="k2bza">
+                      <field label="Owned by" show-help="false" value="{item.owner}" id="aj589"/>
+                    </box>
+                    <box fill-parent="true" size="100" children-sizes="50,50" manage-children="false" id="xvvw8">
+                      <box min-width="50%" id="mbabv">
+                        <field label="Last update" show-help="false" id="xa7mv">
+                          <sub-field value="{item.changedate}" type="date" id="wgjpw"/>
+                        </field>
+                      </box>
+                      <box min-width="50%" id="nyppp">
+                        <field label="Due date" show-help="false" id="xxb_q">
+                          <sub-field value="{item.targetfinish}" type="date" id="kpwb4"/>
+                        </field>
+                      </box>
+                    </box>
+                  </box>
+                </card>
+                <table slot="table" no-data-message="No data found" has-batch-action-toolbar="false" can-reorder-columns="true" display-row-count="false" can-resize="true" id="teamopentable">
+                  <view-manager for-table="teamopentable" selected-item="{app.state.defaultView}" auto-save="false" id="vdg54"/>
+                  <table-column name="ticketid" width="107" label="ID" placeholder-text="ID" id="v32_v">
+                    <box id="xzp4r">
+                      <link on-click="goToDetails" on-click-arg="{item}" label="{item.ticketid}" id="ewz32"/>
+                    </box>
+                  </table-column>
+                  <table-column name="description" width="160" label="Summary" placeholder-text="Summary" id="v5__z">
+                    <box class-name="fieldpadding" id="x6b9b">
+                      <label label="{item.description  ? item.description : '-'}" id="y9_rg"/>
+                    </box>
+                  </table-column>
+                  <table-column name="status" width="130" label="Status" placeholder-text="Status" id="knpze">
+                    <box class-name="fieldpadding" id="kqvb_">
+                      <label label="{item.status   ? item.status : '-'}" id="qg664"/>
+                    </box>
+                  </table-column>
+                  <table-column can-sort="false" can-filter="false" name="internalpriority_description" width="130" label="Priority" placeholder-text="Priority" id="x_w9w">
+                    <box id="by7jb">
+                      <label label="{item.internalpriority_description   ? item.internalpriority_description : '-'}" spacing="none" id="ndp22"/>
+                    </box>
+                  </table-column>
+                  <table-column name="owner" width="130" label="Owned by" placeholder-text="Owned by" id="z3g8w">
+                    <box class-name="fieldpadding" id="zjzz9">
+                      <label label="{item.owner}" id="evnxj"/>
+                    </box>
+                  </table-column>
+                  <table-column name="targetfinish" width="130" label="Due date" placeholder-text="Due date" id="v7k7a">
+                    <box class-name="fieldpadding" id="evyya">
+                      <label label="{item.targetfinish ? item.targetfinish : '-'}" id="v7pdd"/>
+                    </box>
+                  </table-column>
+                  <table-column name="changedate" width="130" label="Last update" placeholder-text="Last update" id="kmgzx">
+                    <box class-name="fieldpadding" id="kqkyj">
+                      <label label="{item.changedate ? item.changedate : '-'}" id="j5rmd"/>
+                    </box>
+                  </table-column>
+                  <table-column can-sort="false" can-filter="false" name="description_longdescription" placeholder-text="Description" label="Description" id="kx">
+                    <box class-name="fieldpadding" id="egzzb">
+                      <label label="{item.description_longdescription ? item.description_longdescription : '-'}" stripped="true" id="zge9d"/>
+                    </box>
+                  </table-column>
+                </table>
+              </card-group>
+            </box>
+          </tab>
+          <tab on-click="setTitle" on-click-arg="{page.state.unassignedTicketsCount}" label="{page.state.unassignedTicketsCount + ' (' + unassignedticketds.state.totalCount + ')'}" id="kk9pq">
+            <box id="e866b" hidden="{!app.state.aiEnable}">
+              <accordion id="e5a3a">
+                <accordion-item class-name="accordianText" title="AI recommendations for you" open="true" id="vge8p">
+                  <label padding="none" label="AI recommended incidents based on your role(s)" id="pnwqw"/>
+                  <card-group datasource="AISuggestedTicketsDS" card-width="600" hide-count-search="true" show-refresh="true" can-search="false" can-sort="false" id="xegxk">
+                    <!--<ai-label align="auto" id="jnymv">
+                      <ai-label-content id="x4rkn">
+                        <field label="AI explained" value="AI explained" id="erwrw"/>
+                        <label wrap="true" label="The following incident has been identified as suitable candidate for you to take ownership." id="kzke6"/>
+                        <ai-label-actions id="km4rz">
+                          <icon-group primary-icon="carbon:map" label="" aria-label="carbon:add" id="yrvr6"/>
+                          <icon-group primary-icon="carbon:location" label="" aria-label="carbon:information" id="qmyna"/>
+                          <button padding="false" label="AI explained" id="d59kn"/>
+                        </ai-label-actions>
+                      </ai-label-content>
+                    </ai-label>-->
+                    <!--<ai-label slot="ai" size="xs" align="auto" id="kk332">
+                      <ai-label-content id="ryznk">
+                        <field label="AI explained" value="AI explained" id="adq79"/>
+                        <label wrap="true" label="The following incident has been identified as suitable candidate for you to take ownership." id="np957"/>
+                        <ai-label-actions id="v_dgk">
+                          <icon-group primary-icon="carbon:map" label="" aria-label="carbon:add" id="n8end"/>
+                          <icon-group primary-icon="carbon:location" label="" aria-label="carbon:information" id="k239a"/>
+                          <button padding="false" label="AI explained" id="vmpvq"/>
+                        </ai-label-actions>
+                      </ai-label-content>
+                    </ai-label>-->
+                    <ai-label slot="ai" class-name="ai-slug-css" size="xs" id="j4d2_">
+                      <ai-label-content id="n_jpa">
+                        <box padding-bottom="-1" id="x6pb6">
+                          <label label="AI explained" id="a2xx3"/>
+                          <tag-group disabled="true" wrap="true" align="center" class-name="pointerdefault serviceStatus" tags="{[{label: item.similarity, type: `cool-gray`}]}" id="zwd5q"/>
+                        </box>
+                        <box size="100" id="bk9wg">
+                          <label label="Unassigned incidents" padding="none" theme="header-large" id="yngkz"/>
+                        </box>
+                        <box padding-top="-.5" id="ez7dv">
+                          <label padding="none" wrap="true" label="The following incident has been identified as suitable candidate for you to take ownership." id="g398v"/>
+                        </box>
+                        <box border-top="true" id="nnmaa"/>
+                        <box direction="column" id="aepjz">
+                          <label label="Similarity configurations set" padding="none" id="yx9ne"/>
+                          <field label="1. Confidence threshold" label-class-name="header-x-small" field-class-name="base-size" value="{item.similarityScore}" show-help="false" padding="none" label-placement="start" id="nqzbr"/>
+                          <field label="2. Time frame" value="past six months" label-class-name="header-x-small" field-class-name="base-size" show-help="false" padding="none" label-placement="start" id="m2xvz"/>
+                          <field label="3. Features" value="Summary, description" label-class-name="header-x-small" field-class-name="base-size" show-help="false" padding="none" label-placement="start" id="aadnv"/>
+                        </box>
+                        <box border-top="true" id="de6n8"/>
+                        <box direction="column" id="nnk_7">
+                          <label wrap="true" padding="none" label="Additional details" id="drb5x"/>
+                          <label wrap="true" label="The recommended results are configured by the administrator of the system in the AI configuration app." id="z5vpm"/>
+                        </box>
+                      </ai-label-content>
+                    </ai-label>
+                    <card slot="item" on-click="goToDetails" id="dpa92">
+                      <box class-name="pointerdefault" min-width="120%" direction="column" children-hide-overflow="true" id="w3jxx">
+                        <box direction="column" vertical-overflow="hidden" id="v2pxz">
+                          <field padding="none" label=" " class-name="cardfieldfont" hide-label="true" value="{item.description}" id="neng5"/>
+                          <field label="ID" class-name="cardticketfont" padding="none" value="{item.ticketid}" label-placement="start" show-help="false" id="a927r"/>
+                        </box>
+                        <box direction="column" padding-top="0.5" class-name="setminheight" id="zb4gb">
+                          <label label="Description" padding="none" theme="field" id="prqg6"/>
+                          <rich-text-viewer content-limit="50" padding-top="-0.5" padding-start="0.5" stripped="true" content="{item.description_longdescription}" id="zrm26"/>
+                        </box>
+                        <box children-sizes="50,50" manage-children="true" id="ne5w_">
+                          <box direction="column" id="ex6wg">
+                            <field label="Status" show-help="false" class-name="status-field" value="{item.status}" id="av_dg"/>
+                          </box>
+                          <box direction="column" id="pmdwp">
+                            <field label="Priority" show-help="false" class-name="status-field" value="{item.internalpriority_description}" id="yq5wy"/>
+                          </box>
+                        </box>
+                        <box fill-parent="true" size="100" children-sizes="50,50" manage-children="false" id="rep6p">
+                          <box min-width="50%" id="xgbwk">
+                            <field label="Last update" show-help="false" id="g89nz">
+                              <sub-field value="{item.changedate}" date-format="dd-mm-yyyy" type="date" id="mb5me"/>
+                            </field>
+                          </box>
+                          <box min-width="50%" id="rxy_d">
+                            <field label="Due date" show-help="false" id="z56ma">
+                              <sub-field value="{item.targetfinish}" type="date" id="b86yn"/>
+                            </field>
+                          </box>
+                        </box>
+                      </box>
+                    </card>
+                  </card-group>
+                </accordion-item>
+              </accordion>
+            </box>
+            <box padding-top="1" id="wnd7b">
+              <label label="All unassigned incidents" theme="header-small" id="vav69"/>
+            </box>
+            <box id="yw8gk">
+              <card-group datasource="unassignedticketds" card-width="600" hide-count-search="true" show-refresh="true" can-search="true" on-panel-changed="onPanelChanged" on-panel-changed-arg="{event}" panel-index="{page.state.panelIndex}" id="d99z5">
+                <card slot="item" on-click="goToDetails" id="j684v">
+                  <box class-name="pointerdefault" min-width="120%" fill-parent="true" direction="column" children-hide-overflow="true" id="emg42">
+                    <box id="vwdbz" direction="column" vertical-overflow="hidden">
+                      <field padding="none" label=" " class-name="cardfieldfont" hide-label="true" value="{item.description}" id="a2nbq"/>
+                      <field label="ID" class-name="cardticketfont" padding="none" value="{item.ticketid}" label-placement="start" show-help="false" id="wax_g"/>
+                    </box>
+                    <box id="xgk_x" direction="column" padding-top="0.5" class-name="setminheight">
+                      <label label="Description" padding="none" theme="field" id="rxw7p"/>
+                      <rich-text-viewer content-limit="50" padding-top="-0.5" padding-start="0.5" stripped="true" content="{item.description_longdescription}" id="dm2rk"/>
+                    </box>
+                    <box id="zrzre" children-sizes="50,50" manage-children="false">
+                      <box direction="column" min-width="50%" id="xem3d">
+                        <field label="Status" show-help="false" class-name="status-field" value="{item.status}" id="pd5_q"/>
+                      </box>
+                      <box direction="column" min-width="50%" id="p8226">
+                        <field label="Priority" show-help="false" class-name="status-field" value="{item.internalpriority_description}" id="gnypd"/>
+                      </box>
+                    </box>
+                    <!-- <adaptive-row id="v2qb9">
+                      <adaptive-column large-width="50" small-width="50" id="e9_2n">
+                       
+                          <field label="Last update" show-help="false" id="q69nb">
+                            <sub-field value="{item.changedate}" date-format="dd-mm-yyyy" type="date" id="qwq_j"/>
+                          </field>
+                      
+                      </adaptive-column>
+                      <adaptive-column large-width="50" small-width="50" max-horizontal-align="end" id="mknm7">
+                        <field label="Due date" show-help="false" id="n7jay">
+                          <sub-field value="{item.targetfinish}" type="date" id="qzz2d"/>
+                        </field>
+                      </adaptive-column>
+                    </adaptive-row> -->
+                    <box fill-parent="true" size="100" children-sizes="50,50" manage-children="false" id="v2qb9">
+                      <box min-width="50%" id="e9_2n">
+                        <field label="Last update" show-help="false" id="q69nb">
+                          <sub-field value="{item.changedate}" date-format="dd-mm-yyyy" type="date" id="qwq_j"/>
+                        </field>
+                      </box>
+                      <box min-width="50%" id="mknm7">
+                        <field label="Due date" show-help="false" id="n7jay">
+                          <sub-field value="{item.targetfinish}" type="date" id="qzz2d"/>
+                        </field>
+                      </box>
+                    </box>
+                  </box>
+                </card>
+                <table slot="table" no-data-message="No data found" has-batch-action-toolbar="false" can-reorder-columns="true" display-row-count="false" can-resize="true" id="unassignedtable">
+                  <view-manager for-table="unassignedtable" selected-item="{app.state.defaultView}" auto-save="false" id="rq__y"/>
+                  <table-column name="ticketid" width="107" label="ID" placeholder-text="ID" id="qm55j">
+                    <box id="pn4b8">
+                      <link on-click="goToDetails" on-click-arg="{item}" label="{item.ticketid}" id="n4j_m"/>
+                    </box>
+                  </table-column>
+                  <table-column name="description" width="195" label="Summary" placeholder-text="Summary" id="a7qem">
+                    <box class-name="fieldpadding" id="yw5__">
+                      <label label="{item.description   ? item.description : '-'}" id="yde9n"/>
+                    </box>
+                  </table-column>
+                  <table-column name="status" width="140" label="Status" placeholder-text="Status" id="jn565">
+                    <box class-name="fieldpadding" id="d9w9g">
+                      <label label="{item.status  ? item.status : '-'}" id="r598v"/>
+                    </box>
+                  </table-column>
+                  <table-column can-sort="false" can-filter="false" name="internalpriority_description" width="140" label="Priority" placeholder-text="Priority" id="ek8_p">
+                    <box id="vdbxx">
+                      <label label="{item.internalpriority_description   ? item.internalpriority_description : '-'}" padding="none" spacing="none" id="k7d2j"/>
+                    </box>
+                  </table-column>
+                  <table-column name="targetfinish" width="140" label="Due date" placeholder-text="Due date" id="zgdvy">
+                    <box class-name="fieldpadding" fill-parent="true" manage-children="true" fill-child="true" flex-basis="100%" id="q2awy">
+                      <label label="{item.targetfinish   ? item.targetfinish : '-'}" id="aae5q"/>
+                    </box>
+                  </table-column>
+                  <table-column name="changedate" width="140" label="Last update" placeholder-text="Last update" id="rzqza">
+                    <box class-name="fieldpadding" id="rjqke">
+                      <label label="{item.changedate   ? item.changedate : '-'}" id="j5md"/>
+                    </box>
+                  </table-column>
+                  <table-column can-sort="false" name="description_longdescription" label="Description" placeholder-text="Description" id="wqv7w">
+                    <box class-name="fieldpadding" id="ppqgg">
+                      <label label="{item.description_longdescription   ? item.description_longdescription : '-'}" stripped="true" id="jn3q7"/>
+                    </box>
+                  </table-column>
+                </table>
+              </card-group>
+            </box>
+          </tab>
+        </tabs>
+      </header-template>
+    </page>
+    <page id="ticketdetails" title="{wodetailsDS.item.ticketid}" controller="TicketDetailController">
+      <states id="ticketdetailsPage">
+        <state name="selectedOwnedBy" value="" type="object" id="pw7wk"/>
+        <state name="preSelectedOwnerType" value="" type="string" id="wza_"/>
+        <state name="commentdialog" value="" type="string" id="g79mj"/>
+        <state name="addCommentstate" value="" type="string" id="vjp7"/>
+        <state name="selectedStatus" value="" type="string" id="vg5q"/>
+        <state name="statusList" value="[{}]" type="object" id="jxd9"/>
+        <state name="tickettype" value=" " type="string" id="qra33"/>
+        <state name="typeofissue" value="" type="string" id="q8jvg"/>
+        <state name="modalDialogData" value="" type="object" id="ppvax"/>
+        <state name="confirmValue" value="0" type="string" id="yqaw3"/>
+        <state name="ticket_status" type="boolean" id="mxrjp"/>
+        <state name="isTicketClosed" type="boolean" id="rvbm2"/>
+        <state name="dynamic_des" type="string" value="" id="yanz9"/>
+        <state name="hideOwnedBy" type="boolean" value="" id="b4yew"/>
+        <state name="isLoadFirst" type="boolean" value="false" id="q7v85"/>
+        <state name="selectedTabIndex" type="number" value="0" id="d7zxp"/>
+        <state name="widthadjust" type="boolean" value="true" id="rdwd3"/>
+        <state name="pagechange" value="false" type="boolean" id="mvggm"/>
+        <state name="selectedRelatetoGlobal" value="" type="object" id="eyaw3"/>
+        <state name="togglevalue" value="" type="boolean" id="b6jdn"/>
+      </states>
+      <maximo-datasource id="activityLogDS" order-by="changedate asc" where="ticketuid={page.params.ids}" object-structure="cduiincidentlog"/>
+      <json-datasource id="modifiedactivitylogs" id-attribute="_id" src="[{}]" selection-mode="none">
+        <schema id="m8337">
+          <attribute name="changedate" searchable="true" id="jv6gr" title="Change Date"/>
+          <attribute name="title" searchable="true" id="egwre" title="Title"/>
+          <attribute name="clientviewable" searchable="true" id="dmgmg" title="Client Viewable"/>
+          <attribute name="recordid" searchable="true" id="d6z8w" title="Record Id"/>
+          <attribute name="details" searchable="true" id="k9_ar" title="Details"/>
+        </schema>
+      </json-datasource>
+      <json-datasource id="wodetailsDS" id-attribute="_id" src="[{}]" selection-mode="none" schema="schema"/>
+      <json-datasource id="relatedRecordDS" id-attribute="_id" src="[{}]" selection-mode="none" schema="schema">
+        <schema id="e92e7">
+          <attribute name="relatedrecordid" searchable="true" id="wjv_p" title="Related Record id"/>
+          <attribute name="description" searchable="true" id="jp2wa" title="Description"/>
+          <attribute name="status" searchable="true" id="wgdz5" title="Status"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="qxp22"/>
+          <attribute name="internalpriority_description" searchable="true" id="gzzgn" title="Priority"/>
+          <attribute name="relatedtoglobal" searchable="true" id="rkv9q" title="Relationship"/>
+          <attribute name="relatedreckey" searchable="true" id="m7my4" title="Id"/>
+          <attribute name="ticketuid" searchable="true" id="p_5dy" title="Ticket U Id"/>
+          <attribute name="relatedrecclass" searchable="true" id="y_qkb" title="Relatedred Class"/>
+        </schema>
+      </json-datasource>
+      <json-datasource id="staticdata" src="static.json"/>
+      <maximo-datasource id="ownerDS1" order-by="personid asc" pre-load="true" object-structure="CDUIUSER" selection-mode="single" saved-query="filterByPerson" saved-query-params="{{'statusList': &quot;ACTIVE&quot;} }">
+        <schema id="wzb5k">
+          <attribute name="personuid" unique-id="true" searchable="false" id="ekg43"/>
+          <attribute name="displayname" type="STRING" searchable="true" id="ebj7k"/>
+          <attribute name="personid" title="personid" searchable="true" id="bqjgk"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="owner_groupDS1" pre-load="true" order-by="persongroup asc" object-structure="CDUIGETPERSONGROUP" selection-mode="single">
+        <schema id="bgjgw">
+          <attribute name="persongroupid" unique-id="true" title=" " id="akg24"/>
+          <attribute name="persongroup" type="STRING" searchable="true" id="pn37n"/>
+          <attribute name="description" title="description" searchable="true" id="j6gbv"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="globalIncidentDS" pre-load="true" where="ISGLOBAL=true" selection-mode="single" object-structure="CDUITICKET">
+        <schema id="wb79z">
+          <attribute name="ticketid" title="ID" searchable="true" id="zqek7"/>
+          <attribute name="description" title="Description" searchable="true" id="p3yp7"/>
+          <attribute name="status" title="Status" searchable="true" id="kvza6"/>
+          <attribute name="class" searchable="false" sortable="false" title="class" id="z2_r3"/>
+          <attribute name="class_maxvalue" searchable="false" sortable="false" title="class_maxvalue" id="k_26v"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="k9b3v"/>
+          <attribute name="internalpriority_description" title="Priority" searchable="true" id="vm47g"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="worklog1" pre-load="false" object-structure="CDUIMYWORKLOG">
+        <schema id="mmb3b">
+          <attribute name="*" unique-id="true" searchable="true" title=" " id="jj8nw"/>
+        </schema>
+      </maximo-datasource>
+      <json-datasource id="possibleSolutionDS" id-attribute="_id" src="[{}]" selection-mode="none" schema="schema"/>
+      <json-datasource id="dismissedSolutionDS" id-attribute="_id" src="[{}]" selection-mode="none" schema="schema"/>
+      <json-datasource id="similarIncidentDS" id-attribute="_id" src="[{}]" selection-mode="none" schema="schema"/>
+      <json-datasource id="dismissedIncidentDS" id-attribute="_id" src="[{}]" selection-mode="none" schema="schema"/>
+      <dialogs id="j4g82">
+        <dialog id="changeStatusnew" size="sm" primary-action-text="Ok" async-primary-action="true" on-primary-action="showConfirmationDialog" secondary-action-text="Cancel" title="Change status">
+          <box direction="column" id="dg74j">
+            <box id="nqyy2">
+              <field label="Summary" value="{wodetailsDS.item.description}" show-help="false" id="e3gmw"/>
+            </box>
+            <box direction="row" id="xdm3y">
+              <box id="j4wmx">
+                <field label="ID" wrap="true" value="{wodetailsDS.item.ticketid}" show-help="false" id="g22yb"/>
+              </box>
+              <box direction="column" id="ey8ep">
+                <box padding-bottom="-1" id="adnky">
+                  <field label="Status" show-help="false" value="{wodetailsDS.item.status}" id="mneyy"/>
+                </box>
+              </box>
+            </box>
+            <box direction="column" id="v4j57">
+              <label label="Description" theme="field" id="ayxv3"/>
+              <box padding-top="-0.5" hidden="{!(wodetailsDS.item.description_longdescription)}" id="k789w">
+                <rich-text-viewer stripped="true" content="{wodetailsDS.item.description_longdescription}" id="g535q"/>
+              </box>
+              <box padding-top="-0.5" hidden="{(wodetailsDS.item.description_longdescription)}" id="na9qb">
+                <rich-text-viewer padding-start=".5" stripped="true" content="{wodetailsDS.item.description_longdescription}" id="qpbq7"/>
+              </box>
+            </box>
+            <!-- <field label="Description" wrap="true" value="{page.state.dialogstate.description_longdescription}" show-help="false" id="mg_a3"/> -->
+            <box padding-start="-.1" direction="column" id="q9qqm">
+              <!-- Defect 133966 | System message displayed on My Tickets when maxadmin user changing status of a tickets to "Unspecified"-->
+              <dropdown hide-unselected-placeholder="true" label="Change status to" datasource="{page.state.statusList}" selected-item="{page.state.selectedStatus}" datasource-value-field="value" datasource-text-field="description" id="p_j73"/>
+            </box>
+          </box>
+        </dialog>
+        <dialog id="add_Comments1" on-primary-action="AddComment" on-secondary-action="resetCommentForm" async-primary-action="true" primary-action-text="Ok" on-close-action="resetCommentForm" secondary-action-text="Cancel" title="Add comment">
+          <box direction="column" id="dq7dd">
+            <box id="pyj7v">
+              <field label="Summary" value="{wodetailsDS.item.description}" show-help="false" id="dvwe4"/>
+            </box>
+            <box direction="column" id="pgv64">
+              <box direction="row" id="kqgr9">
+                <box id="gj5vj">
+                  <field label="ID" value="{wodetailsDS.item.ticketid}" show-help="false" id="vgzn9"/>
+                </box>
+                <box direction="column" id="byb3g">
+                  <box padding-bottom="-0.75" id="v8k7g">
+                    <field label="Status" value="{wodetailsDS.item.status}" show-help="false" id="qg798"/>
+                  </box>
+                </box>
+              </box>
+              <box direction="column" id="g9497">
+                <label label="Description" theme="field" id="v99a5"/>
+                <box padding-top="-0.5" hidden="{!(wodetailsDS.item.description_longdescription)}" id="xrbkr">
+                  <rich-text-viewer stripped="true" content="{wodetailsDS.item.description_longdescription}" id="rbpmn"/>
+                </box>
+                <box padding-top="-0.5" hidden="{(wodetailsDS.item.description_longdescription)}" id="ya8v2">
+                  <rich-text-viewer padding-start=".5" stripped="true" content="{wodetailsDS.item.description_longdescription}" id="waqkm"/>
+                </box>
+              </box>
+            </box>
+            <box direction="column" padding-top=".5" id="jr5rp">
+              <box id="v7y8x">
+                <text-area class-name="textClass" on-change-arg="comment" max-length="100" theme="dark" label="Add comment" value="{page.state.addCommentstate}" placeholder="Write your comment here." id="n59bw"/>
+              </box>
+              <box padding-top="-.5" hidden="{page.state.isTextEmpty == true}" id="exdr6">
+                <label label="Reason for action is required." theme="error" id="nq4nq"/>
+              </box>
+            </box>
+          </box>
+        </dialog>
+        <dialog id="assignTonew" title="Assign to" sub-title="ID {wodetailsDS.item.ticketid}" primary-action-text="Ok" async-primary-action="true" on-primary-action="onSelectedOnwedBy" secondary-action-text="Cancel" on-secondary-action="cancelOwnerPopup" on-close-action="cancelOwnerPopup">
+          <box padding="0" fill-child="true" direction="column" id="y46z7">
+            <box padding-start=".5" id="a432w">
+              <text value="Select an owner or owner group to reassign the incident" id="y6qjp"/>
+            </box>
+            <tabs increase-tabs-width="false" id="qdk6d">
+              <tab label="Owner" id="qp8_n">
+                <!-- <box padding-top="1.25" id="a97qd"> -->
+                <table datasource="ownerDS1" can-resize="true" can-sort="true" can-reorder-columns="false" can-filter="false" on-empty-state-action="{app.toast('Empty table action not implemented')}" hide-empty-state-action="true" display-row-count="false" on-row-click="selectOwner" on-row-click-arg="{{&quot;evt&quot;:event, &quot;name&quot;: &quot;owner&quot;}}" id="qqxej">
+                  <table-column align="start" width="150" name="personid" label="Owner ID" id="qmy2j"/>
+                  <table-column align="start" width="200" name="displayname" label="Owner name" id="mqbzj"/>
+                </table>
+                <!-- </box> -->
+              </tab>
+              <tab label="Owner group" id="n5bxb">
+                <!-- <box padding-top="1.25" id="p8jqr"> -->
+                <table datasource="owner_groupDS1" can-resize="true" can-reorder-columns="false" can-filter="false" on-empty-state-action="{app.toast('Empty table action not implemented')}" hide-empty-state-action="true" display-row-count="false" on-row-click="selectOwner" on-row-click-arg="{{&quot;evt&quot;:event, &quot;name&quot;: &quot;ownerGroup&quot;}}" id="g9_wb">
+                  <table-column name="persongroup" align="start" width="150" label="Group ID" id="ak9xe"/>
+                  <table-column align="start" width="200" name="description" label="Group name" id="wpg6v"/>
+                </table>
+                <!-- </box> -->
+              </tab>
+            </tabs>
+          </box>
+        </dialog>
+        <dialog id="confirmowership" size="sm" primary-action-text="Ok" on-primary-action="onConfirmTakeOnwership" secondary-action-text="Cancel" title="Confirm ownership">
+          <box direction="column" id="bx848">
+            <box padding-top="1" id="rjgae">
+              <field label="Summary" value="{wodetailsDS.item.description}" show-help="false" id="r7zgw"/>
+            </box>
+            <box direction="row" id="k2dk7">
+              <box id="eg8md">
+                <field label="ID" wrap="true" value="{wodetailsDS.item.ticketid}" show-help="false" id="wxqka"/>
+              </box>
+              <box id="y89r2" direction="column">
+                <field label="Status" wrap="true" value="{wodetailsDS.item.status}" show-help="false" id="b7e9p"/>
+              </box>
+            </box>
+            <!-- <box direction="column" id="p4xeg">
+                <label label="Description" id="r47n7"/>
+              <box>  
+                <box padding-top="-0.5" hidden="{wodetailsDS.item.description_longdescription!=""}" id="yq_ay">
+                  <rich-text-viewer content-limit="30" padding-start=".5" stripped="true" content="{wodetailsDS.item.description_longdescription}"/>
+                </box>
+                <box padding-top="-0.5" hidden="{wodetailsDS.item.description_longdescription==""}">
+                  <rich-text-viewer content-limit="30" stripped="true" content="{wodetailsDS.item.description_longdescription}" id="kq844"/>
+                </box>
+              </box>
+            </box> -->
+            <box direction="column" id="pa63e">
+              <label label="Description" theme="field" id="pkneq"/>
+              <box padding-top="-.5" hidden="{!(wodetailsDS.item.description_longdescription)}" id="mp3n2">
+                <rich-text-viewer stripped="true" content="{wodetailsDS.item.description_longdescription}" id="jn5jg"/>
+              </box>
+              <box padding-top="-.5" hidden="{(wodetailsDS.item.description_longdescription)}" id="w2bgq">
+                <rich-text-viewer padding-start=".5" stripped="true" content="{wodetailsDS.item.description_longdescription}" id="jpkxp"/>
+              </box>
+            </box>
+          </box>
+        </dialog>
+        <dialog id="set_as_global" size="sm" primary-action-text="Ok" on-primary-action="onclickSetAsGlobal" secondary-action-text="Cancel" title="Global setting">
+          <box direction="column" padding-top="-1" id="p9bwp">
+            <box id="j2r8y">
+              <field label="Summary" value="{wodetailsDS.item.description}" show-help="false" id="awzy_"/>
+            </box>
+            <box id="rw28b">
+              <box id="gwv3e">
+                <field label="ID" value="{wodetailsDS.item.ticketid}" show-help="false" id="w4e2k"/>
+              </box>
+              <box id="a6p">
+                <field label="Status" value="{wodetailsDS.item.status}" show-help="false" id="nka2w"/>
+              </box>
+            </box>
+            <box direction="column" id="ap4nj">
+              <label label="Description" padding="none" theme="field" id="ndxp9"/>
+              <box padding-top="-0.5" hidden="{!(wodetailsDS.item.description_longdescription)}" id="nd8q2">
+                <rich-text-viewer stripped="true" content="{wodetailsDS.item.description_longdescription}" id="km3ye"/>
+              </box>
+              <box padding-top="-0.5" hidden="{(wodetailsDS.item.description_longdescription)}" id="ygryd">
+                <rich-text-viewer padding-start=".5" stripped="true" content="{wodetailsDS.item.description_longdescription}" id="v4bp7"/>
+              </box>
+            </box>
+            <box id="rq3_2">
+              <toggle label="Is global issue?" toggled="{page.state.togglevalue}" toggle-label-off="No" toggle-label-on="Yes" type="TrueFalse" id="w9q6w"/>
+            </box>
+            <box id="v58za">
+              <input-lookup-template id="button" value="{page.state.selectedRelatetoGlobal ? page.state.selectedRelatetoGlobal.ticketid: ''}" label="Relate to global incident">
+                <button icon="carbon:search" dialog="relate_to_global_dialog" slot="button-group" id="a5tgg"/>
+              </input-lookup-template>
+            </box>
+          </box>
+        </dialog>
+        <dialog id="relate_to_global_dialog" title="Relate to global incident" primary-action-text="Ok" on-primary-action="onClickRelateToGlobal" secondary-action-text="Cancel">
+          <box size="100" id="wdn3x">
+            <table title="" fill-parent="true" can-filter="false" can-reorder-columns="false" display-row-count="false" datasource="globalIncidentDS" id="mevk8">
+              <table-column name="ticketid" width="100" align="start" label="ID" id="g732e">
+                <box padding="0" id="x4d33">
+                  <label label="{item.ticketid}" id="b76w7"/>
+                </box>
+              </table-column>
+              <table-column name="description" align="start" label="Summary" id="g973b">
+                <box padding="0" id="w7zyk">
+                  <label label="{item.description}" spacing="none" id="kqq7k"/>
+                </box>
+              </table-column>
+              <table-column name="status" align="start" label="Status" id="mnvzy">
+                <box padding="0" id="k953x">
+                  <label label="{item.status}" spacing="none" id="m8mvj"/>
+                </box>
+              </table-column>
+              <table-column name="priority" align="start" label="Priority" id="pnp6n">
+                <box padding="0" id="zqg9w">
+                  <label label="{item.internalpriority_description}" spacing="none" id="zdx5q"/>
+                </box>
+              </table-column>
+            </table>
+          </box>
+        </dialog>
+        <dialog title="Confirm dismiss solution" size="sm" primary-action-text="Ok" secondary-action-text="Cancel" id="confirm_dismiss_solution">
+          <box direction="column" id="qeq_9">
+            <box id="d4xjd">
+              <field label="Solution ID" value="{staticdata.item.ticket_id}" show-help="false" id="wp9q7"/>
+            </box>
+            <box padding-top=".5" direction="column" id="byr2w">
+              <label label="Symptoms" padding="none" theme="field" id="vdrxp"/>
+              <rich-text-viewer content-limit="200" stripped="true" content="The property show-last-child-selection only works in touch theme box[b78bn] has a padding-top '0.8' that is nota multiple of 0.125." id="k7_wx"/>
+            </box>
+            <box direction="column" padding-top=".5" id="r7krr">
+              <label label="Cause" padding="none" theme="field" id="kkner"/>
+              <rich-text-viewer content-limit="200" stripped="true" content="The property show-last-child-selection only works in touch theme box[b78bn] has a padding-top '0.8' that is nota multiple of 0.125." id="g3n5_"/>
+            </box>
+          </box>
+        </dialog>
+        <dialog size="sm" title="Confirm dismiss Incident" primary-action-text="Ok" secondary-action-text="Cancel" id="confirm_dismiss_incident">
+          <box direction="column" id="ad__w">
+            <box id="vbxdj">
+              <field label="ID" value="{staticdata.item.ticket_id}" show-help="false" id="rk8xk"/>
+            </box>
+            <box padding-top=".5" direction="column" id="d7pnr">
+              <label label="Summary" padding="none" theme="field" id="j69yg"/>
+              <rich-text-viewer content-limit="200" stripped="true" content="The property show-last-child-selection only works in touch theme box[b78bn] has a padding-top '0.8' that is nota multiple of 0.125." id="mp68e"/>
+            </box>
+            <box direction="column" padding-top=".5" id="ap844">
+              <label label="Description" padding="none" theme="field" id="kvk44"/>
+              <rich-text-viewer stripped="true" content-limit="200" content="The property show-last-child-selection only works in touch theme box[b78bn] has a padding-top '0.8' that is nota multiple of 0.125." id="x7rkv"/>
+            </box>
+          </box>
+        </dialog>
+        <dialog title="Confirmation" id="closed_ticket_dialognew" primary-action-text="OK" secondary-action-text="Cancel" on-primary-action="changeStatusMyTickets">
+          <box id="ewn2v">
+            <rich-text-viewer content-limit="200" stripped="true" content="Changing status to CLOSE will make the incident no longer editable. Are you sure want to close incident?" id="zrzzk"/>
+          </box>
+        </dialog>
+      </dialogs>
+      <header-template enable-white-background="true" stack-breadcrumbs-with-tabs="true" show-current-page-in-bread-crumb="false" hide-breadcrumb="false" bread-crumb-icon-name="home" sub-title="{wodetailsDS.item.description}" title="{wodetailsDS.item.class_description} {wodetailsDS.item.ticketid}" title-column-width="50" id="md6g8">
+        <menu-button hidden="{page.params.flag === 'goToDetails1'}" slot="menu-button-action" id="menubutton1" disabled="{wodetailsDS.item.status === app.state.ticketstatus.CLOSED.toUpperCase() || wodetailsDS.item.status === app.state.ticketstatus.RESOLVED.toUpperCase() || wodetailsDS.item.status === app.state.ticketstatus.REJECTED.toUpperCase() || wodetailsDS.item.status === app.state.ticketstatus.CANCELLED.toUpperCase()}" on-click="resetResolveData">
+          <menu-item hidden="{!app.state.aiEnable}" dialog="add_Comments1" label="Add comment" id="jm8e9"/>
+          <menu-item hidden="{!app.state.aiEnable}" label="Change status" on-click="changeStatus" on-click-arg="{wodetailsDS}" id="j935a"/>
+          <menu-item hidden="{!app.state.aiEnable}" disabled="{wodetailsDS.item.isglobalValue}" dialog="set_as_global" label="Global setting" id="wdny3"/>
+          <menu-item hidden="{!app.state.aiEnable}" dialog="assignTonew" label="Reassign" id="x7jpj"/>
+          <menu-item id="menu2" hidden="{app.userInfo.personid === wodetailsDS.item.owner }" dialog="confirmowership" label="Take ownership"/>
+          <menu-item id="menu1" on-click="loadApp" on-click-arg="{{appName: wodetailsDS.item.class_maxvalue, context:{uniqueid: wodetailsDS.item.ticketuid}, options:{embedded:true}}}" hidden="{page.state.ticket_status}" label="View source record"/>
+        </menu-button>
+        <button kind="primary" slot="buttons" label="Actions" id="nkxg9"/>
+        <box hidden="{app.state.screen.size === 'xlg' || app.state.screen.size === 'max' || app.state.screen.size === 'lg' ? true : false}" padding-start="-.3" slot="custom-content" background-color="field-01" class-name="ticketDetailHeader" id="mprjm" direction="column">
+          <box id="wnm9w" padding-start=".5">
+            <menu-button id="mq5_q" disabled="{wodetailsDS.item.status === app.state.ticketstatus.CLOSED.toUpperCase() || wodetailsDS.item.status === app.state.ticketstatus.RESOLVED.toUpperCase() || wodetailsDS.item.status === app.state.ticketstatus.REJECTED.toUpperCase() || wodetailsDS.item.status === app.state.ticketstatus.CANCELLED.toUpperCase()}" on-click="resetResolveData">
+              <menu-item id="gkw4y" on-click="loadApp" on-click-arg="{{appName: wodetailsDS.item.class_maxvalue, context:{uniqueid: wodetailsDS.item.ticketuid}, options:{embedded:true}}}" hidden="{page.state.ticket_status}" label="View source record"/>
+              <menu-item id="e_6x4" hidden="{app.userInfo.personid === wodetailsDS.item.owner }" dialog="confirmowership" label="Take ownership"/>
+              <menu-item dialog="mark_as_global" label="Global setting" id="pgwbd"/>
+            </menu-button>
+          </box>
+        </box>
+        <menu-button hidden="{page.params.flag !== 'goToDetails1'}" slot="menu-button-action" id="menubutton0" label="Actions">
+          <menu-item dialog="confirm_dismiss_incident" label="Dismiss" id="b2v32"/>
+          <menu-item dialog="set_as_global" label="Global setting" id="r6w37"/>
+          <menu-item dialog="relate_to_global_dialog" label="Relate incident" id="g5_zk"/>
+          <menu-item on-click="loadApp" on-click-arg="{{appName: wodetailsDS.item.class_maxvalue, context:{uniqueid: wodetailsDS.item.ticketuid}, options:{embedded:true}}}" hidden="{page.state.ticket_status}" label="View source record" id="kx279"/>
+        </menu-button>
+        <tabs hidden="{app.state.aiEnable}" selected="{page.state.selectedTabIndex}" class-name="paddingtableft" id="wn3w7" slot="tabs">
+          <tab label="Incident details" id="bpyn4">
+            <box background-color="field-01" id="jqenp">
+              <border-layout id="bnjyq">
+                <top id="j7vep">
+                  <box direction="column" id="p2dvv">
+                    <label label="Summary" id="xayp2"/>
+                    <box padding-top="-0.5" id="vpy32">
+                      <rich-text-viewer padding-start="0.5" stripped="true" content="{wodetailsDS.item.description_longdescription}" id="n232x"/>
+                    </box>
+                  </box>
+                </top>
+              </border-layout>
+            </box>
+            <box direction="row" id="zxpvr" background-color="field-01" padding-bottom="7.5">
+              <box id="nvgjm" direction="column" min-width="100" padding-bottom="5">
+                <box id="gg7ew" children-sizes="43,57">
+                  <box id="aq7dm">
+                    <box id="myaqp" min-width="50" padding-end="15">
+                      <border-layout id="qqn32">
+                        <top id="d9neg">
+                          <label theme="header-x-small" label="Incident information" id="xdx7j"/>
+                        </top>
+                        <middle id="v6nb3">
+                          <box direction="column" id="pk2_2">
+                            <label label="Priority" id="akw7v"/>
+                            <box padding-top="-.75" id="m_k6g">
+                              <field id="zjg43">
+                                <sub-field value="{wodetailsDS.item.internalpriority_description}" id="j4mnd"/>
+                              </field>
+                            </box>
+                          </box>
+                          <box id="e58bq" direction="column" min-width="100" padding-end="{app.state.screen.size === 'xlg' || app.state.screen.size === 'max' ? '15' : '0'}">
+                            <label label="Status" id="agxn4"/>
+                            <box padding-top="-1" id="dv5b6" direction="column" hidden="{page.state.ticket_status}">
+                              <label label="{page.state.dynamic_des}" theme="medium" id="qx8gv"/>
+                            </box>
+                            <box padding-top="-1" id="vdv65" hidden="{!page.state.ticket_status}">
+                              <icon-group padding="true" primary-icon="carbon:checkmark--filled" primary-icon-color="green" label="{app.state.ticketstatus.RESOLVED}" id="n3z_6"/>
+                            </box>
+                          </box>
+                          <box hidden="{page.state.hideOwnedBy}" direction="column" id="myne6">
+                            <label label="Owned by" id="gxmnz"/>
+                            <box padding-top="-.75" id="e_wpg">
+                              <field id="r2pp3">
+                                <sub-field value="{wodetailsDS.item.owner ? wodetailsDS.item.owner : wodetailsDS.item.ownergroup}" id="xzj7r"/>
+                              </field>
+                            </box>
+                          </box>
+                          <box id="yadb2" direction="column">
+                            <label label="Last update" id="bgz_y"/>
+                            <box padding-top="-.75" id="k43ge">
+                              <field id="a6bzj">
+                                <sub-field value="{wodetailsDS.item.changedate}" type="date" id="xjm7b"/>
+                              </field>
+                            </box>
+                          </box>
+                        </middle>
+                      </border-layout>
+                    </box>
+                  </box>
+                  <box id="jydy5">
+                    <box id="kdje4">
+                      <border-layout id="qx5_b">
+                        <top id="mjjxd">
+                          <label theme="header-x-small" label="SLA information" id="x2wjb"/>
+                        </top>
+                        <middle id="jx9bw">
+                          <border-layout id="y29pb">
+                            <top id="ndz48">
+                              <box direction="column" id="jv_rg">
+                                <label label="SLA due at" id="n7abx"/>
+                                <box padding-top="-.75" id="m6_q5">
+                                  <field value="{wodetailsDS.item.targetfinish}" id="e52re"/>
+                                </box>
+                              </box>
+                            </top>
+                            <middle id="xqrqd">
+                              <box direction="column" id="rbzyp">
+                                <label label="SLA action" id="dwjgv"/>
+                                <box direction="row" id="xegz5" hidden="{!(wodetailsDS.item.slaAction)}" padding-top="-0.25">
+                                  <field label="" hide-label="true" label-placement="top" value="{wodetailsDS.item.slaAction}" id="k_n5a"/>
+                                </box>
+                                <box direction="row" id="kqnxn" class-name="unspecifiedcustomcss" hidden="{(wodetailsDS.item.slaAction)}" padding-top="-0.25">
+                                  <label label="Unspecified" padding="none" id="ybprw"/>
+                                </box>
+                              </box>
+                            </middle>
+                          </border-layout>
+                        </middle>
+                      </border-layout>
+                    </box>
+                  </box>
+                </box>
+              </box>
+            </box>
+          </tab>
+          <tab label="Activity log" id="bv8d2">
+            <box background-color="ui-01" class-name="{modifiedactivitylogs.items.length === 0 ? 'padactivitynew' : 'padactivity'}" direction="column" id="zby2j">
+              <table rows-per-page="8" hidden="{app.state.screen.size === 'sm' || app.state.screen.size === 'md'}" row-height="compact" can-reorder-columns="true" has-batch-action-toolbar="false" datasource="modifiedactivitylogs" can-sort="true" can-filter="false" display-row-count="false" can-search="false" id="v99en" use-radio-button-single-select="false">
+                <table-column name="recordid" label="State" id="vze7n" width="50">
+                  <box fill-parent="true" horizontal-align="start" border="false" id="zm4mp">
+                    <image src="{item.glyphiconClass}" height="16" width="16" title="" allow-popup="false" id="eepgv"/>
+                  </box>
+                </table-column>
+                <table-column name="title" align="start" label="Operation status" id="y88w2">
+                  <field value="{item.title}" empty-field-placeholder="-" id="n27np" class-name="fieldpadding" hide-label="true" label=" "/>
+                </table-column>
+                <table-column name="changedate" align="start" label="Date and time" id="p7dd2">
+                  <field class-name="fieldpadding" empty-field-placeholder="-" id="b947m">
+                    <sub-field id="qp2wy" value="{item.changedate}" type="datetime"/>
+                  </field>
+                </table-column>
+                <table-column name="details" align="start" label="Comments" id="qdddy">
+                  <label label="-" color="text-05" padding="none" hidden="{item.details}" spacing="none" id="n2b7x"/>
+                  <label label="{item.details}" theme="small" padding="none" hidden="{!item.details}" spacing="none" stripped="true" id="vq3v_"/>
+                </table-column>
+              </table>
+            </box>
+            <box padding-top="1" id="n9d25" hidden="{app.state.screen.size === 'max' || app.state.screen.size === 'xlg' || app.state.screen.size === 'lg'}"/>
+            <card-group can-sort="false" hidden="{app.state.screen.size === 'max' || app.state.screen.size === 'xlg' || app.state.screen.size === 'lg'}" datasource="modifiedactivitylogs" show-refresh="true" empty-set-string="No result found." id="dwngp">
+              <ic-card-template slot="item" chevron-kind="{'ghost'}" show-chevron="false" on-chevron-click="listItemClickHandler" id="x5mbg">
+                <box slot="slot1" id="rdyn4" padding="1">
+                  <border-layout padding="false" id="ey_m7" width="100%" bottom-border="false">
+                    <start id="jyvmx">
+                      <box fill-parent="true" horizontal-align="start" border="false" id="qpj9w">
+                        <image src="{item.glyphiconClass}" width="16" title="" allow-popup="false" id="a9a9z"/>
+                      </box>
+                    </start>
+                    <middle id="krq43">
+                      <box id="z67pv" padding-top="-.75">
+                        <label label="{item.title}" theme="header-small" id="ar8qr"/>
+                      </box>
+                    </middle>
+                    <bottom id="n42rk">
+                      <box direction="column" id="w6j37">
+                        <box id="b4rky" padding-start="1" padding-top="-1">
+                          <field id="mk7nv">
+                            <sub-field id="nz95d" value="{item.changedate}" type="datetime"/>
+                          </field>
+                        </box>
+                        <box id="qyv72" padding-start="1" direction="column">
+                          <label label="-" color="text-05" hidden="{item.details}" id="aebzk"/>
+                          <label wrap="true" label="{item.details}" hidden="{!item.details}" stripped="true" id="d6qp4"/>
+                        </box>
+                      </box>
+                    </bottom>
+                  </border-layout>
+                </box>
+              </ic-card-template>
+            </card-group>
+          </tab>
+          <tab label="Related records" id="znyeg">
+            <box background-color="ui-01" class-name="{relatedRecordDS.items.length === 0 ? 'padactivitynew' : 'padactivity'}" direction="column" id="p35yx">
+              <table rows-per-page="8" row-height="compact" hidden="{app.state.screen.size === 'sm' || app.state.screen.size === 'md'}" can-reorder-columns="false" display-row-count="false" has-batch-action-toolbar="false" datasource="relatedRecordDS" can-filter="false" can-sort="true" can-search="true" id="qnd5z" use-radio-button-single-select="false">
+                <table-column name="relatedreckey" label="ID" width="107" id="qpg4r">
+                  <link on-click="goToDetails" on-click-arg="{item}" label="{item.relatedreckey}" id="xv9n8"/>
+                </table-column>
+                <table-column name="description" label="Summary" id="xz2nv" width="400">
+                  <field value="{item.description}" empty-field-placeholder="-" class-name="fieldpadding" id="b7pz7" hide-label="true" label=" "/>
+                </table-column>
+                <table-column name="relatedrecclass" label="Type" id="z6ep3" width="90">
+                  <field value="{item.relatedrecclass}" empty-field-placeholder="-" class-name="fieldpadding" id="qen4m" hide-label="true" label=" "/>
+                </table-column>
+                <table-column name="status" label="Status" id="mxbzx" width="50">
+                  <field value="{item.status}" empty-field-placeholder="-" class-name="fieldpadding" id="ag6mw" hide-label="true" label=" "/>
+                </table-column>
+                <table-column name="internalpriority_description" label="Priority" id="r8w25" width="40">
+                  <field value="{item.internalpriority_description}" empty-field-placeholder="-" class-name="fieldpadding" id="k2z22" hide-label="true" label=" "/>
+                </table-column>
+                <table-column name="relatedtoglobal" label="Relationship" align="center" id="zwejn" width="50">
+                  <field value="{item.relatedtoglobal}" empty-field-placeholder="-" class-name="fieldpadding" id="yrez6" hide-label="true" label=" "/>
+                </table-column>
+              </table>
+            </box>
+          </tab>
+        </tabs>
+      </header-template>
+      <adaptive-row hidden="{!app.state.aiEnable}" id="gajyw">
+      <!-- Author Name: Dinesh | Date: 03/03/2026 | Defect No: 137207 | MIT 9.1.44 | Service delivery | My Incidents | In Activity log tab data under the columns are not aligned as per figma -->
+        <adaptive-column large-width="100" small-width="50" direction="row" id="qep8a">
+          <box fill-parent="true" children-sizes="100" padding-start="-.5" padding-end="-5" background-color="ui-01" border="true" direction="column" id="nyjaa">
+            <tabs selected="{page.state.selectedTabIndex}" id="dydxr">
+              <tab label="Incident details" id="n52ww">
+                <box background-color="field-01" padding-start="1" id="r3y88" padding-top="0.5">
+                  <border-layout id="vndv5">
+                    <top id="bere3">
+                      <box direction="column" id="nz7e3">
+                        <label label="Description" theme="field" id="d_386"/>
+                        <box padding-top="-0.5" id="p7p4p">
+                          <rich-text-viewer padding-start=".5" stripped="true" content="{wodetailsDS.item.description_longdescription}" id="bpdvg"/>
+                        </box>
+                      </box>
+                    </top>
+                  </border-layout>
+                </box>
+                <adaptive-row id="jyx6m">
+                  <adaptive-column id="v3z8w">
+                    <box direction="column" padding-start="1.5" id="j_qd6">
+                      <box id="azny4">
+                        <label label="Incident information" theme="header-x-small" id="g2j4w"/>
+                      </box>
+                      <box direction="column" id="rndy9">
+                        <label label="Priority" theme="field" id="dgry_"/>
+                        <box padding-top="-.75" id="ygjmq">
+                          <field id="w5_vw">
+                            <sub-field value="{wodetailsDS.item.internalpriority_description}" id="r9mn6"/>
+                            <!-- <sub-field value="{wodetailsDS.item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (wodetailsDS.item.internalpriority== 1) ? (app.state.priority_data['1'].description): (wodetailsDS.item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="r9mn6"/> -->
+                          </field>
+                        </box>
+                      </box>
+                      <box direction="column" id="yb855">
+                        <label label="Status" theme="field" id="d4r8j"/>
+                        <box padding-top="-.75" id="nybdv">
+                          <field id="va9ax">
+                            <sub-field value="{wodetailsDS.item.status}" id="wm3y8"/>
+                            <!-- <sub-field value="{wodetailsDS.item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (wodetailsDS.item.internalpriority== 1) ? (app.state.priority_data['1'].description): (wodetailsDS.item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="r9mn6"/> -->
+                          </field>
+                        </box>
+                      </box>
+                      <box direction="column" id="z2kj3">
+                        <label label="Is global?" theme="field" id="ydpq4"/>
+                        <box padding-top="-.75" id="kqy5r">
+                          <field id="yq8jj">
+                            <sub-field value="{wodetailsDS.item.isglobal}" id="mvrjn"/>
+                            <!-- <sub-field value="{wodetailsDS.item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (wodetailsDS.item.internalpriority== 1) ? (app.state.priority_data['1'].description): (wodetailsDS.item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="r9mn6"/> -->
+                          </field>
+                        </box>
+                      </box>
+                      <box hidden="{page.state.hideOwnedBy}" direction="column" id="m53yy">
+                        <label label="Owned by" id="p3372"/>
+                        <box padding-top="-.75" id="zmqzd">
+                          <field id="qn8q2">
+                            <sub-field value="{wodetailsDS.item.owner ? wodetailsDS.item.owner : wodetailsDS.item.ownergroup}" id="pd92e"/>
+                          </field>
+                        </box>
+                      </box>
+                      <box direction="column" id="qj59y">
+                        <label label="Created by" theme="field" id="w648d"/>
+                        <box padding-top="-.75" id="p4p6b">
+                          <field id="y67v_">
+                            <sub-field value="{wodetailsDS.item.createdby}" id="zagw_"/>
+                            <!-- <sub-field value="{wodetailsDS.item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (wodetailsDS.item.internalpriority== 1) ? (app.state.priority_data['1'].description): (wodetailsDS.item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="r9mn6"/> -->
+                          </field>
+                        </box>
+                      </box>
+                    </box>
+                  </adaptive-column>
+                  <adaptive-column id="ww8e5">
+                    <box direction="column" padding-top="-.5" id="r_n9q">
+                      <border-layout id="dp29e">
+                        <top id="rznyx">
+                          <label label="SLA information" theme="header-x-small" id="kw649"/>
+                        </top>
+                        <start id="wz_xm">
+                          <box direction="column" id="rp9_d">
+                            <box id="qgnq8">
+                              <field label="SLA due at" show-help="false" value="{wodetailsDS.item.targetfinish}" id="y8e8x"/>
+                            </box>
+                          </box>
+                        </start>
+                        <bottom id="p35dw">
+                          <box direction="column" id="v_8am">
+                            <label label="SLA action" theme="field" id="qkd64"/>
+                            <box direction="row" id="av49g" hidden="{!(wodetailsDS.item.slaAction)}" padding-top="-0.75">
+                              <field label="" hide-label="true" label-placement="top" value="{wodetailsDS.item.slaAction}" id="aw3y3"/>
+                            </box>
+                            <box direction="row" id="rna8p" class-name="unspecifiedcustomcss" hidden="{(wodetailsDS.item.slaAction)}" padding-top="-0.75">
+                              <label label="Unspecified" padding="none" id="y9e22"/>
+                            </box>
+                          </box>
+                        </bottom>
+                      </border-layout>
+                    </box>
+                  </adaptive-column>
+                </adaptive-row>
+              </tab>
+              <tab label="Activity log" id="paxep">
+             <!-- Author Name: Dinesh | Date: 03/03/2026 | Defect No: 137207 | MIT 9.1.44 | Service delivery | My Incidents | In Activity log tab data under the columns are not aligned as per figma -->
+               <box background-color="ui-01" direction="column" padding-top="-1" id="mrjwa">
+                  <table can-resize="true" rows-per-page="8" can-reorder-columns="false" has-batch-action-toolbar="false" datasource="modifiedactivitylogs" can-sort="true" can-filter="false" display-row-count="false" can-search="false" use-radio-button-single-select="false" id="wq7v6">
+                    <table-column name="recordid" width="90" label="State" id="vvgaw">
+                      <box fill-parent="true" horizontal-align="start" border="false" id="r_m4n">
+                        <image src="{item.glyphiconClass}" height="16" width="16" title="" allow-popup="false" id="ewwv_"/>
+                      </box>
+                    </table-column>
+                    <table-column name="title" align="start" width="180" label="Operation status" id="a69g7">
+                      <field value="{item.title}" empty-field-placeholder="-" class-name="newfieldpadding" hide-label="true" label=" " id="qrbqn"/>
+                    </table-column>
+                    <table-column name="changedate" align="start" width="150" label="Date and time" id="r6_em">
+                      <field class-name="newfieldpadding" empty-field-placeholder="-" id="erk8k">
+                        <sub-field value="{item.changedate}" type="datetime" id="gr8_p"/>
+                      </field>
+                    </table-column>
+                    <table-column name="details" align="start" label="Comments" id="vwgde">
+                      <box id="je4vg">
+                        <label label="-" color="text-05" padding="none" hidden="{item.details}" id="dp5y6"/>
+                      </box>
+                      <box id="zk8vx">
+                        <label label="{item.details}" theme="small" hidden="{!item.details}" stripped="true" id="zdyw_"/>
+                      </box>
+                    </table-column>
+                  </table>
+                </box>
+                <box padding-top="1" hidden="{app.state.screen.size === 'max' || app.state.screen.size === 'xlg' || app.state.screen.size === 'lg'}" id="yy7gj"/>
+                <card-group can-sort="false" hidden="{app.state.screen.size === 'max' || app.state.screen.size === 'xlg' || app.state.screen.size === 'lg'}" datasource="modifiedactivitylogs" show-refresh="true" empty-set-string="No result found." id="nrbjq">
+                  <ic-card-template slot="item" chevron-kind="{'ghost'}" show-chevron="false" on-chevron-click="listItemClickHandler" id="abkbm">
+                    <box slot="slot1" padding="1" id="aa_y6">
+                      <border-layout padding="false" width="100%" bottom-border="false" id="m9md6">
+                        <start id="bemma">
+                          <box fill-parent="true" horizontal-align="start" border="false" id="zmb6r">
+                            <image src="{item.glyphiconClass}" width="16" title="" allow-popup="false" id="zg94r"/>
+                          </box>
+                        </start>
+                        <middle id="wek4e">
+                          <box padding-top="-.75" id="ege29">
+                            <label label="{item.title}" theme="header-small" id="n2pa_"/>
+                          </box>
+                        </middle>
+                        <bottom id="p56q8">
+                          <box direction="column" id="wg_pe">
+                            <box padding-start="1" padding-top="-1" id="prxwq">
+                              <field id="zgb_g">
+                                <sub-field value="{item.changedate}" type="datetime" id="kr9pq"/>
+                              </field>
+                            </box>
+                            <box padding-start="1" direction="column" id="ekb68">
+                              <label label="-" color="text-05" hidden="{item.details}" id="gd4g_"/>
+                              <label wrap="true" label="{item.details}" hidden="{!item.details}" stripped="true" id="mmq_k"/>
+                            </box>
+                          </box>
+                        </bottom>
+                      </border-layout>
+                    </box>
+                  </ic-card-template>
+                </card-group>
+              </tab>
+              <tab label="Related records" id="vkb68">
+                <box background-color="ui-01" direction="column" id="r9gzm">
+                  <table rows-per-page="8" can-resize="true" hidden="{app.state.screen.size === 'sm' || app.state.screen.size === 'md'}" can-reorder-columns="false" display-row-count="false" has-batch-action-toolbar="false" datasource="relatedRecordDS" can-filter="false" can-sort="true" can-search="true" use-radio-button-single-select="false" id="jmzgx">
+                    <table-column name="relatedreckey" width="111" label="ID" id="a6374">
+                      <link on-click="goToDetails" on-click-arg="{item}" label="{item.relatedreckey}" id="n3qvy"/>
+                    </table-column>
+                    <table-column name="description" width="130" label="Summary" id="j7ze_">
+                      <field value="{item.description}" empty-field-placeholder="-" class-name="newfieldpadding" hide-label="true" label=" " id="w888g"/>
+                    </table-column>
+                    <table-column name="relatedrecclass" width="85" label="Type" id="w_3m9">
+                      <field value="{item.relatedrecclass_description}" empty-field-placeholder="-" class-name="newfieldpadding" hide-label="true" label=" " id="bgn3a"/>
+                    </table-column>
+                    <table-column name="status" label="Status" width="95" id="kmd_j">
+                      <field value="{item.status}" empty-field-placeholder="-" class-name="newfieldpadding" hide-label="true" label=" " id="mn78x"/>
+                    </table-column>
+                    <table-column name="internalpriority_description" width="100" label="Priority" id="wjej_">
+                      <field value="{item.internalpriority_description}" empty-field-placeholder="-" class-name="newfieldpadding" hide-label="true" label=" " id="djg47"/>
+                    </table-column>
+                    <table-column name="relatedtoglobal" label="Relationship" width="134" align="center" id="dpr6_">
+                      <!-- <box horizontal-align="end" id="xq9qa"> -->
+                      <field value="{item.relatedtoglobal}" empty-field-placeholder="-" class-name="newfieldpadding" hide-label="true" label=" " id="vxnk7"/>
+                      <!-- </box> -->
+                    </table-column>
+                  </table>
+                </box>
+              </tab>
+            </tabs>
+          </box>
+        </adaptive-column>
+        <adaptive-column large-width="50" small-width="50" id="zjjgn">
+          <!-- <label label="{page.params.flag}" id="bma_5"/> -->
+          <box fill-parent="true" background-color="ui-01" padding-start=".2" direction="column" border="false" children-sizes="100" id="q6pzd">
+            <tabs id="danz9">
+              <tab label="Possible solutions" id="b42wq">
+                <box direction="column" padding-top="-.5" background-color="ui-02" id="baeav">
+                  <stacked-panel selected-index="{page.state.selectedTab}" id="xde8z">
+                    <panel id="zy4bv">
+                      <data-list tight="true" show-search="false" datasource="possibleSolutionDS" id="j6q6_">
+                        <list-item id="dwqwe">
+                          <!-- <border-layout id="ed5j4"> -->
+                          <!-- <start horizontal-overflow="visible" id="np6ed"> -->
+                          <!-- <start width="100" horizontal-align="start" id="x_97j"> -->
+                          <!-- <box children-sizes="90,10" id="q2xxk">
+                                <box size="90" id="rrexz">
+                                  <label label="{item.solution}" id="dpgpe"/>
+                                </box>
+                                <box size="10" id="jmwd6">
+                                  <ai-label align="bottom-end" id="kdzq3">
+                                    <ai-label-content id="z9kd6">
+                                      <field label="AI" value="AI Label" id="dqar6"/>
+                                      <label wrap="true" label="Confidence score Lorem ipsum dolor sit amet di os consectetur adipiscing elit sed do eiusmod tempor incididunt ut fsil labore et dolore magna aliqua." id="mzy6e"/>
+                                      <ai-label-actions id="x9mkj">
+                                        <icon-group primary-icon="carbon:map" label="" aria-label="carbon:add" id="yymmd"/>
+                                        <icon-group primary-icon="carbon:location" label="" aria-label="carbon:information" id="y892v"/>
+                                        <button padding="false" label="AI Information" id="p_57d"/>
+                                      </ai-label-actions>
+                                    </ai-label-content>
+                                  </ai-label>
+                                </box>
+                              </box> -->
+                          <!-- </start> -->
+                          <!-- <bottom id="wrk_v">
+                              <box padding-top="-.8" id="jgdqq">
+                                <label label="{item.description}" id="dw7_d"/>
+                              </box>
+                            </bottom> -->
+                          <!-- </border-layout> -->
+                          <border-layout fill-parent="true" id="p_k3j">
+                            <middle horizontal-overflow="visible" id="qkj5g">
+                              <box padding-start="-.5" id="k8apz">
+                                <label label="{item.solution}" id="dpgpe"/>
+                              </box>
+                            </middle>
+                            <end horizontal-overflow="visible" id="nzn4x">
+                              <box id="jmwd6">
+                                <ai-label class-name="ai-slug-css-Similar" id="kdzq3">
+                                  <ai-label-content id="z9kd6">
+                                    <box padding-bottom="-1" id="rxkye">
+                                      <label label="AI explained" id="dqar6"/>
+                                      <tag-group disabled="true" wrap="true" align="center" class-name="pointerdefault serviceStatus" tags="{[{label: item.similarity, type: `cool-gray`}]}" id="naq84"/>
+                                    </box>
+                                    <box size="100" id="xz5z4">
+                                      <label label="Possible solutions" padding="none" theme="header-large" id="k4me9"/>
+                                    </box>
+                                    <box padding-top="-.5" id="a3q4r">
+                                      <label padding="none" wrap="true" label="The following solutions were applied to similar incidents to the current incident you have selected." id="mzy6e"/>
+                                    </box>
+                                    <box border-top="true" id="edyrd"/>
+                                    <box direction="column" id="vq86q">
+                                      <label label="Similarity configurations set" padding="none" id="zjv9k"/>
+                                      <field label="1. Similarity threshold" label-class-name="header-x-small" field-class-name="base-size" value="{item.score}" show-help="false" padding="none" label-placement="start" id="vqmar"/>
+                                      <field label="2. Time frame" value="past six months" label-class-name="header-x-small" field-class-name="base-size" show-help="false" padding="none" label-placement="start" id="v8byn"/>
+                                      <field label="3. Features" value="Summary, description" label-class-name="header-x-small" field-class-name="base-size" show-help="false" padding="none" label-placement="start" id="z45br"/>
+                                    </box>
+                                    <box border-top="true" id="dgw6k"/>
+                                    <box direction="column" id="p75xx">
+                                      <label wrap="true" padding="none" label="Additional details" id="zr862"/>
+                                      <label wrap="true" label="The incident similarity results are configured by the administrator of the system in the AI configuration app." id="jjv99"/>
+                                    </box>
+                                  </ai-label-content>
+                                </ai-label>
+                              </box>
+                            </end>
+                            <bottom horizontal-overflow="visible" id="bmwnq">
+                              <box padding-top="-.8" id="jgdqq">
+                                <label label="{item.description}" id="dw7_d"/>
+                              </box>
+                            </bottom>
+                          </border-layout>
+                        </list-item>
+                        <list-details id="kqxgg">
+                          <adaptive-row id="y469e">
+                            <adaptive-column large-width="90" xlarge-width="95" medium-width="85" small-width="80" direction="column" id="kr6w4">
+                              <border-layout id="dx7pw">
+                                <start horizontal-overflow="visible" vertical-overflow="visible" id="x23m6">
+                                  <border-layout id="qvza6">
+                                    <top id="zw8j3">
+                                      <box direction="column" padding-top="-.2" padding-start="2" id="bw7n8">
+                                        <label label="Symptoms" padding="none" theme="field" id="bjrw6"/>
+                                        <rich-text-viewer content-limit="200" padding-start=".4" stripped="true" content="{item.problemcode_longdescription}" id="ej67n"/>
+                                      </box>
+                                    </top>
+                                    <middle horizontal-overflow="visible" vertical-overflow="visible" id="nza3w">
+                                      <box direction="column" padding-top=".5" padding-start="2" id="jrk7q">
+                                        <label label="Cause" padding="none" theme="field" id="nzdk8"/>
+                                        <rich-text-viewer content-limit="200" padding-start=".4" stripped="true" content="{item.fr1code_longdescription}" id="k4d2z"/>
+                                      </box>
+                                    </middle>
+                                    <bottom id="ar49g">
+                                      <box direction="column" padding-top=".5" padding-start="2" id="z5knj">
+                                        <label label="Resolution" padding="none" theme="field" id="wex8b"/>
+                                        <rich-text-viewer content-limit="200" padding-start=".4" stripped="true" content="{item.fr2code_longdescription}" id="xd_qd"/>
+                                      </box>
+                                    </bottom>
+                                  </border-layout>
+                                </start>
+                                <bottom id="mp5b2">
+                                  <border-layout width="100" fill-parent="true" id="wx747">
+                                    <start width="10" id="j_dzw">
+                                      <box padding-start="2" id="z6z5v">
+                                        <button label="View more details" on-click="gosolutionpage" on-click-arg="{item}" kind="tertiary" id="nz7_6"/>
+                                      </box>
+                                    </start>
+                                  </border-layout>
+                                </bottom>
+                              </border-layout>
+                            </adaptive-column>
+                            <adaptive-column id="nrqdk"/>
+                          </adaptive-row>
+                        </list-details>
+                      </data-list>
+                    </panel>
+                    <!-- <panel id="e9xd5">
+                      <box manage-children="true" fill-child="true" padding-top=".5" size="100" background-color="ui-01" direction="column" id="d8k_e">
+                        <accordion size="xl" align="start" id="gzkmw">
+                          <accordion-item class-name="bgdismissed" title="Dismissed solutions" id="ezwm3">
+                            <table can-resize="true" can-page="false" row-height="compact" can-reorder-columns="false" has-batch-action-toolbar="false" datasource="dismissedSolutionDS" can-sort="true" can-filter="false" display-row-count="false" can-search="false" use-radio-button-single-select="false" id="jrj_w">
+                              <table-column name="solution" width="150" label="Solution ID" id="pq9ae">
+                                <link on-click="goToDetails" on-click-arg="{item}" label="{item.solution}" id="myydj"/>
+                              </table-column>
+                              <table-column name="description" align="start" width="300" label="Summary" id="y3665">
+                                <field value="{item.description}" empty-field-placeholder="-" class-name="fieldpadding" hide-label="true" label=" " id="x964g"/>
+                              </table-column>
+                            </table>
+                          </accordion-item>
+                        </accordion>
+                      </box>
+                    </panel> -->
+                  </stacked-panel>
+                </box>
+              </tab>
+              <tab label="Similar incidents" id="adnga">
+                <box direction="column" padding-top="-.5" background-color="ui-02" id="kgjr2">
+                  <stacked-panel selected-index="{page.state.selectedTab}" id="yvr7j">
+                    <panel id="e8w6q">
+                      <data-list tight="true" datasource="similarIncidentDS" show-search="false" id="gr98_">
+                        <list-item id="z8ea3">
+                          <border-layout fill-parent="true" id="bm8_e">
+                            <middle horizontal-overflow="visible" id="jyy5b">
+                              <box id="wqe57">
+                                <label label="{item.ticketid}" spacing="none" id="ry9k3"/>
+                              </box>
+                            </middle>
+                            <end horizontal-overflow="visible" id="qz3wy">
+                              <box id="kq44a">
+                                <ai-label class-name="ai-slug-css-Similar" id="dbd99">
+                                  <ai-label-content id="z89w4">
+                                    <box padding-bottom="-1" id="pn6ew">
+                                      <label label="AI explained" id="kwvaj"/>
+                                      <tag-group disabled="true" wrap="true" align="center" class-name="pointerdefault serviceStatus" tags="{[{label: item.similarity, type: `cool-gray`}]}" id="pz9r8"/>
+                                    </box>
+                                    <label label="Similar incidents" padding="none" theme="header-large" id="pevv5"/>
+                                    <box padding-top="-.5" id="xrdar">
+                                      <label padding="none" wrap="true" label="The following incidents have been found to have a high similarity to the current incident you have selected." id="pxwam"/>
+                                    </box>
+                                    <box border-top="true" id="dx7yb"/>
+                                    <box direction="column" id="jrp7k">
+                                      <label label="Similarity configurations set" padding="none" id="emrnw"/>
+                                      <field label="1. Similarity threshold" label-class-name="header-x-small" field-class-name="base-size" value="{item.score}" show-help="false" padding="none" label-placement="start" id="qe6_6"/>
+                                      <field label="2. Time frame" value="past six months" label-class-name="header-x-small" field-class-name="base-size" show-help="false" padding="none" label-placement="start" id="kenmj"/>
+                                      <field label="3. Features" value="Summary, description" label-class-name="header-x-small" field-class-name="base-size" show-help="false" padding="none" label-placement="start" id="qxv7r"/>
+                                    </box>
+                                    <box border-top="true" id="y35dv"/>
+                                    <box direction="column" id="r_j36">
+                                      <label wrap="true" padding="none" label="Additional details" id="arrbv"/>
+                                      <label wrap="true" label="The similarity results are configured by the administrator of the system in the AI configuration app." id="zj7dk"/>
+                                    </box>
+                                  </ai-label-content>
+                                </ai-label>
+                              </box>
+                            </end>
+                            <bottom horizontal-overflow="visible" id="gy4zr">
+                              <box padding-top="-.8" id="xjxw5">
+                                <label label="{item.description}" id="md8k_"/>
+                              </box>
+                            </bottom>
+                          </border-layout>
+                        </list-item>
+                        <list-details id="mp4pw">
+                          <box direction="column" padding-top="-1" id="yv2jg">
+                            <box direction="column" id="pm7xk">
+                              <box background-color="field-01" padding-start="2" id="kz98w">
+                                <border-layout id="q_y99">
+                                  <top id="xqqdq">
+                                    <box direction="column" id="gxeqz">
+                                      <box id="y38pr">
+                                        <label label="Description" theme="field" id="n42xw"/>
+                                      </box>
+                                      <box padding-top="-.3" id="j6pge">
+                                        <rich-text-viewer padding-start=".5" stripped="true" content="{item.description_longdescription}" id="qz7m4"/>
+                                      </box>
+                                    </box>
+                                  </top>
+                                </border-layout>
+                              </box>
+                              <adaptive-row id="myqm6">
+                                <adaptive-column id="eg_ra">
+                                  <box direction="column" padding-top="-.5" padding-start="2.5" id="mzzgq">
+                                    <box id="kabkb">
+                                      <label label="Incident information" theme="header-x-small" id="nx2gn"/>
+                                    </box>
+                                    <box padding-top="-.8" id="dkb9n">
+                                      <box id="vgkz2">
+                                        <field label="Priority" id="kammz">
+                                          <sub-field value="{item.internalpriority_description}" id="qx96v"/>
+                                        </field>
+                                      </box>
+                                      <box padding-start="4" id="z86kj">
+                                        <field label="Last update" id="rkexn">
+                                          <sub-field value="{item.changedate}" type="date" id="jqgyb"/>
+                                        </field>
+                                      </box>
+                                      <box id="jayqz" padding-start="4">
+                                        <field label="Status" show-help="false" value="{item.status}" id="rnedw"/>
+                                      </box>
+                                    </box>
+                                    <box id="aenkr" padding-top="-.5">
+                                      <box id="ew9wp">
+                                        <field label="Latest activity" show-help="false" value="{item.latestActivity}" id="yk892"/>
+                                      </box>
+                                    </box>
+                                  </box>
+                                </adaptive-column>
+                                <adaptive-column id="w8pqp"/>
+                              </adaptive-row>
+                            </box>
+                            <box direction="row" padding-start="1" id="by4xd">
+                              <box direction="column" id="rg2a3">
+                                <box direction="column" padding-start="1.5" id="rp3bb">
+                                  <box id="zv_k8">
+                                    <label label="SLA information" theme="header-x-small" id="pv35g"/>
+                                  </box>
+                                  <box direction="column" padding-top="-.5" id="vr38x">
+                                    <box id="a4862">
+                                      <field label="SLA due at" show-help="false" value="{[{'value': item.slaDueAt, 'type': 'datetime'}]}" id="ekbv8"/>
+                                    </box>
+                                  </box>
+                                  <box direction="column" id="pjeap">
+                                    <label label="SLA action" theme="field" id="z9y62"/>
+                                    <box direction="row" hidden="{!(item.slaAction)}" padding-top="-1" id="p7a86">
+                                      <field label="" hide-label="true" label-placement="top" value="{item.slaAction}" id="ey3_8"/>
+                                    </box>
+                                    <box direction="row" class-name="unspecifiedcustomcss" hidden="{(item.slaAction)}" padding-top="-0.75" id="zwdmm">
+                                      <label label="Unspecified" padding="none" id="rzm7x"/>
+                                    </box>
+                                  </box>
+                                </box>
+                              </box>
+                              <box direction="column" padding-start="4" padding-top="-.5" id="agk4v">
+                                <box direction="column" id="zxq4p">
+                                  <border-layout id="ar3jr">
+                                    <top id="rnx_x">
+                                      <label label="Solution information" theme="header-x-small" id="jr4b8"/>
+                                    </top>
+                                    <start id="kmj7e">
+                                      <box padding-top="-.5" id="a449z">
+                                        <label label="Solution ID" theme="field" id="kxbpz"/>
+                                      </box>
+                                      <box padding-top="-.75" id="qzvza">
+                                        <link on-click="gosolutionpage" on-click-arg="{item}" label="{item.solution}" id="bwm6p"/>
+                                      </box>
+                                    </start>
+                                  </border-layout>
+                                </box>
+                              </box>
+                            </box>
+                            <box padding-start="2.5" id="epn88">
+                              <button label="View more details" on-click="goToDetailsPage" on-click-arg="{item}" kind="tertiary" id="k2n5k"/>
+                              <!-- <box padding-top=".5" padding-start="-2" id="wjz78">
+                                <link label="Dismiss history" id="g_w26"/>
+                              </box> -->
+                            </box>
+                          </box>
+                        </list-details>
+                      </data-list>
+                    </panel>
+                    <panel id="awenb">
+                      <box padding-top=".5" background-color="ui-01" direction="column" id="q9ayz">
+                        <accordion size="xl" align="start" id="akxvj">
+                          <accordion-item class-name="bgdismissed" title="Dismissed incidents" id="w376g">
+                            <table can-resize="true" can-page="false" row-height="compact" can-reorder-columns="false" has-batch-action-toolbar="false" datasource="dismissedIncidentDS" can-sort="true" can-filter="false" display-row-count="false" can-search="false" use-radio-button-single-select="false" id="kyyge">
+                              <table-column name="ticketid" width="150" label="ID" id="a6gwv">
+                                <link on-click="goToDetails" on-click-arg="{item}" label="{item.ticketid}" id="jnmga"/>
+                              </table-column>
+                              <table-column name="description" align="start" width="180" label="Summary" id="py9e4">
+                                <field value="{item.description}" empty-field-placeholder="-" class-name="fieldpadding" hide-label="true" label=" " id="rk6dy"/>
+                              </table-column>
+                            </table>
+                          </accordion-item>
+                        </accordion>
+                      </box>
+                    </panel>
+                  </stacked-panel>
+                </box>
+              </tab>
+            </tabs>
+          </box>
+        </adaptive-column>
+      </adaptive-row>
+    </page>
+    <page id="resolvedticketdetails" controller="ResolvedTicketDetailController">
+      <states id="ticketdetailsPageRes">
+        <state name="tickettype" value=" " type="string" id="z5mr7"/>
+        <state name="typeofissue" value="" type="string" id="vd2a3"/>
+        <state name="modalDialogData" value="" type="object" id="zmev8"/>
+        <state name="confirmValue" value="0" type="string" id="ax6ja"/>
+        <state name="ticket_status" type="boolean" id="rga6j"/>
+        <state name="isTicketClosed" type="boolean" id="qae7m"/>
+        <state name="dynamic_des" type="string" value="" id="kr4bn"/>
+        <state name="hideOwnedBy" type="boolean" value="" id="rz_kk"/>
+        <state name="isLoadFirst" type="boolean" value="false" id="xa_5w"/>
+        <state name="selectedTabIndex" type="number" value="0" id="gjy7k"/>
+        <state name="widthadjust" type="boolean" value="true" id="vj2np"/>
+        <state name="pagechange" value="false" type="boolean" id="xk_gr"/>
+        <state name="selectedRelatetoGlobal" value="" type="object" id="gx2kg"/>
+        <state name="isglobalToggle" value="" type="boolean" id="xvr7r"/>
+      </states>
+      <json-datasource id="solutionResnewRes" id-attribute="_id" src="[{}]" selection-mode="none">
+        <schema id="eamrg">
+          <attribute name="*" unique-id="true" title=" " id="x6653"/>
+        </schema>
+      </json-datasource>
+      <json-datasource id="modifiedactivitylogsRes" id-attribute="_id" src="[{}]" selection-mode="none">
+        <schema id="rw2a7">
+          <attribute name="changedate" searchable="true" title="Change date" id="ba3b2"/>
+          <attribute name="title" searchable="true" title="Title" id="r2m76"/>
+          <attribute name="clientviewable" searchable="true" title="Client viewable" id="mg5_4"/>
+          <attribute name="recordid" searchable="true" title="Record Id" id="kgd73"/>
+          <attribute name="details" searchable="true" title="Details" id="g6vyq"/>
+        </schema>
+      </json-datasource>
+      <json-datasource id="wodetailsDSRes" id-attribute="_id" src="[{}]" selection-mode="none" schema="schema"/>
+      <json-datasource id="relatedRecordDSRes" id-attribute="_id" src="[{}]" selection-mode="none" schema="schema">
+        <schema id="rdyx5">
+          <attribute name="relatedrecordid" searchable="true" title="Related Record id" id="gm57g"/>
+          <attribute name="description" searchable="true" title="Description" id="z6w8q"/>
+          <attribute name="status" searchable="true" title="Status" id="pzxry"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="ewqrr"/>
+          <attribute name="internalpriority_description" searchable="true" title="Priority" id="yj979"/>
+          <attribute name="relatedtoglobal" searchable="true" title="Relationship" id="b6ynx"/>
+          <attribute name="relatedreckey" searchable="true" title="Ticket Id" id="e3_jy"/>
+          <attribute name="ticketuid" searchable="true" title="Ticket U Id" id="w6waw"/>
+          <attribute name="relatedrecclass" searchable="true" title="Relatedred Class" id="mg3db"/>
+        </schema>
+      </json-datasource>
+      <maximo-datasource id="similarticketAIDSRes" object-structure="CDUIAISIMILAR">
+        <schema id="n79my">
+          <attribute name="*" unique-id="true" title=" " id="rxde8"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource id="globalIncidentDSRes" pre-load="true" where="ISGLOBAL=true" selection-mode="single" object-structure="CDUITICKET">
+        <schema id="mx4j2">
+          <attribute name="ticketid" title="Incident ID" searchable="true" id="kd3yn"/>
+          <attribute name="description" title="Description" searchable="true" id="a8j6r"/>
+          <attribute name="status" title="Status" searchable="true" id="qwwyy"/>
+          <attribute name="class" searchable="false" sortable="false" title="class" id="g49v9"/>
+          <attribute name="class_maxvalue" searchable="false" sortable="false" title="class_maxvalue" id="x8y5p"/>
+          <attribute name="internalpriority" sortable="true" searchable="true" title="Priority" id="n4njq"/>
+          <attribute name="internalpriority_description" title="Priority" searchable="true" id="dxrzb"/>
+        </schema>
+      </maximo-datasource>
+      <dialogs id="vqpb9">
+        <dialog id="set_as_global_resolve" size="sm" primary-action-text="Ok" on-primary-action="onclickSetAsGlobal" secondary-action-text="Cancel" title="Global setting">
+          <box direction="column" padding-top="-1" id="vzymm">
+            <box id="rvbqw">
+              <field label="Summary" value="{wodetailsDSRes.item.description}" show-help="false" id="yvbrj"/>
+            </box>
+            <box id="q8ey8">
+              <box id="yqwn4">
+                <field label="ID" value="{wodetailsDSRes.item.ticketid}" show-help="false" id="wa8y5"/>
+              </box>
+              <box id="arnky">
+                <field label="Status" value="{wodetailsDSRes.item.status}" show-help="false" id="rg29v"/>
+              </box>
+            </box>
+            <box direction="column" id="z65yk">
+              <label label="Description" padding="none" theme="field" id="ggav9"/>
+              <rich-text-viewer content-limit="200" padding-top="-0.5" stripped="true" content="{wodetailsDSRes.item.description_longdescription}" id="nk55d"/>
+            </box>
+            <box id="v5zvk">
+              <toggle label="Is global issue?" toggled="{page.state.isglobalToggle}" toggle-label-off="No" toggle-label-on="Yes" type="TrueFalse" id="d9pn2"/>
+            </box>
+            <box id="qn3pr">
+              <input-lookup-template id="button1" value="{page.state.selectedRelatetoGlobal ? page.state.selectedRelatetoGlobal.ticketid: ''}" label="Relate to global incident">
+                <button icon="carbon:search" dialog="relate_to_global_dialog_resolve" slot="button-group" id="ea9b7"/>
+              </input-lookup-template>
+            </box>
+          </box>
+        </dialog>
+        <dialog id="relate_to_global_dialog_resolve" title="Relate to global incident" primary-action-text="Ok" on-primary-action="onClickRelateToGlobal" secondary-action-text="Cancel">
+          <box size="100" id="yzvmw">
+            <table title="" fill-parent="true" can-filter="false" can-reorder-columns="false" display-row-count="false" datasource="globalIncidentDSRes" id="bpkw_">
+              <table-column name="ticketid" width="100" align="start" label="ID" id="eamx3">
+                <box padding="0" id="ez5rx">
+                  <label label="{item.ticketid}" id="b6jk2"/>
+                </box>
+              </table-column>
+              <table-column name="description" align="start" label="Summary" id="d6b_w">
+                <box padding="0" id="arabg">
+                  <label label="{item.description}" spacing="none" id="nr2mn"/>
+                </box>
+              </table-column>
+              <table-column name="status" align="start" label="Status" id="zk2kr">
+                <box padding="0" id="a5bdn">
+                  <label label="{item.status}" spacing="none" id="bvywp"/>
+                </box>
+              </table-column>
+              <table-column name="priority" align="start" label="Priority" id="dndpm">
+                <box padding="0" id="gm__2">
+                  <label label="{item.internalpriority_description}" spacing="none" id="wajk9"/>
+                </box>
+              </table-column>
+            </table>
+          </box>
+        </dialog>
+        <dialog id="dismiss_incident" size="sm" primary-action-text="Ok" on-primary-action="onDismissIncident" secondary-action-text="Cancel" title="Confirm dismiss incident">
+          <box direction="column" padding-top="-0.5" id="jg9x7">
+            <box id="wddzk">
+              <field label="ID" value="{wodetailsDSRes.item.ticketid}" show-help="false" id="p8_a7"/>
+            </box>
+            <box direction="column" id="rd4_m">
+              <box id="jv7dw">
+                <label theme="field" label="Summary" id="gm3z9"/>
+              </box>
+              <rich-text-viewer content-limit="200" stripped="true" content="{wodetailsDSRes.item.description}" id="q55pv"/>
+            </box>
+            <box direction="column" id="ab879">
+              <box id="gxewp">
+                <label label="Description" theme="field" id="jj8g_"/>
+              </box>
+              <rich-text-viewer stripped="true" content="{wodetailsDSRes.item.description_longdescription}" id="r6vnd"/>
+            </box>
+          </box>
+        </dialog>
+      </dialogs>
+      <header-template enable-white-background="true" stack-breadcrumbs-with-tabs="true" show-current-page-in-bread-crumb="false" hide-breadcrumb="false" bread-crumb-icon-name="home" sub-title="{wodetailsDSRes.item.description}" title="{wodetailsDSRes.item.class_description} #{wodetailsDSRes.item.ticketid}" title-column-width="50" id="pn28p">
+        <box hidden="{app.state.screen.size === 'xlg' || app.state.screen.size === 'max' || app.state.screen.size === 'lg' ? true : false}" padding-start="-.3" slot="custom-content" background-color="field-01" class-name="ticketDetailHeader" direction="column" id="by6xb">
+          <box padding-start=".5" id="wmzeb">
+            <menu-button label="Actions" disabled="{wodetailsDSRes.item.status === app.state.ticketstatus.CLOSED.toUpperCase() || wodetailsDSRes.item.status === app.state.ticketstatus.RESOLVED.toUpperCase() || wodetailsDSRes.item.status === app.state.ticketstatus.REJECTED.toUpperCase() || wodetailsDSRes.item.status === app.state.ticketstatus.CANCELLED.toUpperCase()}" on-click="resetResolveData" id="yvpqq">
+              <menu-item dialog="dismiss_incident" label="Dismiss" id="mjbv3"/>
+              <menu-item disabled="{wodetailsDSRes.item.isglobalValue}" dialog="set_as_global_resolve" label="Global setting" id="pv43_"/>
+              <menu-item on-click="loadApp" on-click-arg="{{appName: wodetailsDSRes.item.class_maxvalue, context:{uniqueid: wodetailsDSRes.item.ticketuid}, options:{embedded:true}}}" hidden="{page.state.ticket_status}" label="View source record" id="gr3z6"/>
+            </menu-button>
+          </box>
+        </box>
+        <menu-button slot="menu-button-action" id="x32gb">
+          <menu-item dialog="dismiss_incident" label="Dismiss" id="q7x9n"/>
+          <menu-item disabled="{wodetailsDSRes.item.isglobalValue}" dialog="set_as_global_resolve" label="Global setting" id="wyd2r"/>
+          <menu-item hidden="true" dialog="relate_to_global_dialog" label="Relate incident" id="y4rp6"/>
+          <menu-item on-click="loadApp" on-click-arg="{{appName: wodetailsDSRes.item.class_maxvalue, context:{uniqueid: wodetailsDSRes.item.ticketuid}, options:{embedded:true}}}" hidden="{page.state.ticket_status}" label="View source record" id="pa5ew"/>
+        </menu-button>
+        <button kind="primary" slot="buttons" label="Actions" id="b8dvp"/>
+      </header-template>
+      <box id="p58m8" children-sizes="100">
+        <box direction="row" id="n_44e" fill-parent="true" children-sizes="100">
+          <box children-sizes="100" fill-parent="true" padding-start="-.5" padding-end="-5" background-color="ui-01" border="true" direction="column" id="w3b93">
+            <tabs selected="{page.state.selectedTabIndex}" id="aj3b3">
+              <tab label="Incident details" id="bekb7">
+                <box background-color="field-01" padding-start="1" padding-top="0.5" id="jqp5q">
+                  <border-layout id="qjgqd">
+                    <top id="r47ka">
+                      <box direction="column" id="rk_gm">
+                        <label label="Description" theme="field" id="npgm3"/>
+                        <box padding-top="-0.5" id="x8m8x">
+                          <rich-text-viewer padding-start=".5" stripped="true" content="{wodetailsDSRes.item.description_longdescription}" id="jq_b7"/>
+                        </box>
+                      </box>
+                    </top>
+                  </border-layout>
+                </box>
+                <adaptive-row id="pxjym">
+                  <adaptive-column id="vdzge">
+                    <box direction="column" padding-start="1.5" id="p2gdv">
+                      <box id="dnr68">
+                        <label label="Incident information" theme="header-x-small" id="vb_jd"/>
+                      </box>
+                      <box direction="column" id="mk5kx">
+                        <label label="Priority" theme="field" id="xzyzk"/>
+                        <box padding-top="-.75" id="g_p8_">
+                          <field id="zbmv8">
+                            <sub-field value="{wodetailsDSRes.item.internalpriority_description}" id="mmq2b"/>
+                            <!-- <sub-field value="{wodetailsDSRes.item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (wodetailsDSRes.item.internalpriority== 1) ? (app.state.priority_data['1'].description): (wodetailsDSRes.item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="r9mn6"/> -->
+                          </field>
+                        </box>
+                      </box>
+                      <box direction="column" id="x2kk3">
+                        <label label="Status" theme="field" id="j8wky"/>
+                        <box padding-top="-.75" id="znkr_">
+                          <field id="eem86">
+                            <sub-field value="{wodetailsDSRes.item.status}" id="ga4j2"/>
+                            <!-- <sub-field value="{wodetailsDSRes.item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (wodetailsDSRes.item.internalpriority== 1) ? (app.state.priority_data['1'].description): (wodetailsDSRes.item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="r9mn6"/> -->
+                          </field>
+                        </box>
+                      </box>
+                      <box direction="column" id="gm97a">
+                        <label label="Is global?" theme="field" id="jm5vb"/>
+                        <box padding-top="-.75" id="wakm9">
+                          <field id="e73vw">
+                            <sub-field value="{wodetailsDSRes.item.isglobal}" id="wyq9b"/>
+                            <!-- <sub-field value="{wodetailsDSRes.item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (wodetailsDSRes.item.internalpriority== 1) ? (app.state.priority_data['1'].description): (wodetailsDSRes.item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="r9mn6"/> -->
+                          </field>
+                        </box>
+                      </box>
+                      <box direction="column" id="npjkb">
+                        <label label="Created by" theme="field" id="vprk3"/>
+                        <box padding-top="-.75" id="kedxw">
+                          <field id="ng5q7">
+                            <sub-field value="{wodetailsDSRes.item.createdby}" id="j2ry7"/>
+                            <!-- <sub-field value="{wodetailsDSRes.item.internalpriority== 0 ? (app.state.priority_data['0'].description) : (wodetailsDSRes.item.internalpriority== 1) ? (app.state.priority_data['1'].description): (wodetailsDSRes.item.internalpriority== 2) ? app.state.priority_data['2'].description :(item.internalpriority== 3) ? app.state.priority_data['3'].description : '-'}" id="r9mn6"/> -->
+                          </field>
+                        </box>
+                      </box>
+                    </box>
+                  </adaptive-column>
+                  <adaptive-column id="epb7j">
+                    <box direction="column" padding-top="-.5" id="ez_bg">
+                      <border-layout id="dj4ym">
+                        <top id="xq9e_">
+                          <label label="SLA information" theme="header-x-small" id="rkm76"/>
+                        </top>
+                        <start id="pkx9p">
+                          <box direction="column" id="x6w65">
+                            <box id="z2__m">
+                              <field label="SLA due at" show-help="false" value="{[{'value': wodetailsDSRes.item.targetfinish, 'type': 'datetime'}]}" id="gv4bm"/>
+                            </box>
+                            <!-- </box> -->
+                          </box>
+                        </start>
+                        <bottom id="erp9y">
+                          <box direction="column" id="vj7x6">
+                            <label label="SLA action" theme="field" id="w49j4"/>
+                            <box direction="row" hidden="{!(wodetailsDSRes.item.slaAction)}" padding-top="-0.75" id="pxm83">
+                              <field label="" hide-label="true" label-placement="top" value="{wodetailsDSRes.item.slaAction}" id="vbg92"/>
+                            </box>
+                            <box direction="row" class-name="unspecifiedcustomcss" hidden="{(wodetailsDSRes.item.slaAction)}" padding-top="-0.75" id="qg55n">
+                              <label label="Unspecified" padding="none" id="yvnz2"/>
+                            </box>
+                          </box>
+                        </bottom>
+                      </border-layout>
+                    </box>
+                  </adaptive-column>
+                </adaptive-row>
+              </tab>
+              <tab label="Activity log" id="p_y9_">
+                <box class-name="{modifiedactivitylogsRes.items.length === 0 ? 'padactivitynew' : 'padactivity'}" direction="column" id="a4d3b">
+                  <table can-resize="true" rows-per-page="8" can-reorder-columns="false" has-batch-action-toolbar="false" datasource="modifiedactivitylogsRes" can-sort="true" can-filter="false" display-row-count="false" can-search="false" use-radio-button-single-select="false" id="yw6kr">
+                    <table-column name="recordid" width="90" label="State" id="vz2yz">
+                      <box fill-parent="true" horizontal-align="start" border="false" id="jgvad">
+                        <image src="{item.glyphiconClass}" height="16" width="16" title="" allow-popup="false" id="ebmk7"/>
+                      </box>
+                    </table-column>
+                    <table-column name="title" align="start" width="300" label="Operation status" id="wx83y">
+                      <field value="{item.title}" empty-field-placeholder="-" class-name="fieldpadding" hide-label="true" label=" " id="yaya3"/>
+                    </table-column>
+                    <table-column name="changedate" align="start" width="200" label="Date and time" id="qk3v5">
+                      <field class-name="fieldpadding" empty-field-placeholder="-" id="kx__k">
+                        <sub-field value="{item.changedate}" type="datetime" id="v862a"/>
+                      </field>
+                    </table-column>
+                    <table-column name="details" align="start" width="400" label="Comments" id="vpgnw">
+                      <box id="br65b">
+                        <label label="-" color="text-05" padding="none" hidden="{item.details}" spacing="none" id="evnj6"/>
+                      </box>
+                      <box id="qe38r">
+                        <label label="{item.details}" theme="small" padding="none" hidden="{!item.details}" spacing="none" stripped="true" id="qnmdw"/>
+                      </box>
+                    </table-column>
+                  </table>
+                </box>
+                <box padding-top="1" hidden="{app.state.screen.size === 'max' || app.state.screen.size === 'xlg' || app.state.screen.size === 'lg'}" id="ypyw6"/>
+                <card-group can-sort="false" hidden="{app.state.screen.size === 'max' || app.state.screen.size === 'xlg' || app.state.screen.size === 'lg'}" datasource="modifiedactivitylogsRes" show-refresh="true" empty-set-string="No result found." id="vvr2g">
+                  <ic-card-template slot="item" chevron-kind="{'ghost'}" show-chevron="false" on-chevron-click="listItemClickHandler" id="pyzvk">
+                    <box slot="slot1" padding="1" id="bde7z">
+                      <border-layout padding="false" width="100%" bottom-border="false" id="eyzz6">
+                        <start id="n_n9d">
+                          <box fill-parent="true" horizontal-align="start" border="false" id="yk_3x">
+                            <image src="{item.glyphiconClass}" width="16" title="" allow-popup="false" id="pkbny"/>
+                          </box>
+                        </start>
+                        <middle id="xxy2e">
+                          <box padding-top="-.75" id="rv9z8">
+                            <label label="{item.title}" theme="header-small" id="mq4wj"/>
+                          </box>
+                        </middle>
+                        <bottom id="xyape">
+                          <box direction="column" id="vqwer">
+                            <box padding-start="1" padding-top="-1" id="gnvg8">
+                              <field id="aee54">
+                                <sub-field value="{item.changedate}" type="datetime" id="an_yd"/>
+                              </field>
+                            </box>
+                            <box padding-start="1" direction="column" id="g84m7">
+                              <label label="-" color="text-05" hidden="{item.details}" id="xmz3n"/>
+                              <label wrap="true" label="{item.details}" hidden="{!item.details}" stripped="true" id="zn3q3"/>
+                            </box>
+                          </box>
+                        </bottom>
+                      </border-layout>
+                    </box>
+                  </ic-card-template>
+                </card-group>
+              </tab>
+              <tab label="Related records" id="xka49">
+                <box background-color="ui-01" class-name="{relatedRecordDSRes.items.length === 0 ? 'padactivitynew' : 'padactivity'}" direction="column" id="z4vw4">
+                  <table rows-per-page="8" can-resize="true" hidden="{app.state.screen.size === 'sm' || app.state.screen.size === 'md'}" can-reorder-columns="false" display-row-count="false" has-batch-action-toolbar="false" datasource="relatedRecordDSRes" can-filter="false" can-sort="true" can-search="true" use-radio-button-single-select="false" id="k4qn8">
+                    <table-column name="relatedreckey" width="150" label="ID" id="pdv5p">
+                      <link on-click="goToDetails" on-click-arg="{item}" label="{item.relatedreckey}" id="kqx3g"/>
+                    </table-column>
+                    <table-column name="description" width="400" label="Summary" id="d_eaq">
+                      <field value="{item.description}" empty-field-placeholder="-" class-name="fieldpadding" hide-label="true" label=" " id="p2566"/>
+                    </table-column>
+                    <table-column name="relatedrecclass" width="150" label="Type" id="vr_wk">
+                      <field value="{item.relatedrecclass_description}" empty-field-placeholder="-" class-name="fieldpadding" hide-label="true" label=" " id="n4wxm"/>
+                    </table-column>
+                    <table-column name="status" label="Status" width="150" id="waaa8">
+                      <field value="{item.status}" empty-field-placeholder="-" class-name="fieldpadding" hide-label="true" label=" " id="mm9wr"/>
+                    </table-column>
+                    <table-column name="internalpriority_description" width="150" label="Priority" id="e85nv">
+                      <field value="{item.internalpriority_description}" empty-field-placeholder="-" class-name="fieldpadding" hide-label="true" label=" " id="gp6k4"/>
+                    </table-column>
+                    <table-column name="relatedtoglobal" label="Relationship" width="180" align="center" id="xmded">
+                      <field value="{item.relatedtoglobal}" empty-field-placeholder="-" class-name="fieldpadding" hide-label="true" label=" " id="rez97"/>
+                    </table-column>
+                  </table>
+                </box>
+              </tab>
+              <tab label="Solution" id="d7mm">
+                <box background-color="field-01" padding-start="1" id="ry88" padding-top="0.5">
+                  <border-layout id="vdv5">
+                    <top id="ere3">
+                      <box direction="column" id="epzq8">
+                        <field label="Solution ID" show-help="false" value="{solutionResnewRes.item.solution}" id="a_mkr"/>
+                        <field label="Solution status" show-help="false" value="{solutionResnewRes.item.status}" id="yma79"/>
+                        <box id="mg_xy">
+                          <label label="Symptoms" theme="field" id="yaax_"/>
+                        </box>
+                        <box class-name="fontrichtext" padding-top="-0.4" id="bj29a">
+                          <rich-text-viewer content-limit="200" stripped="true" padding-start="0.5" content="{solutionResnewRes.item.problemcode_longdescription}" id="b9mqw"/>
+                        </box>
+                        <box id="nm3ey">
+                          <label label="Cause" theme="field" id="jqdp4"/>
+                        </box>
+                        <box class-name="fontrichtext" padding-top="-0.4" id="nk4_a">
+                          <rich-text-viewer stripped="true" content="{solutionResnewRes.item.fr1code_longdescription}" padding-start="0.5" id="qny23"/>
+                        </box>
+                        <box id="b2rmy">
+                          <label label="Resolution" theme="field" id="xbm33"/>
+                        </box>
+                        <box class-name="fontrichtext" padding-top="-0.4" id="gx8ge">
+                          <rich-text-viewer stripped="true" content="{solutionResnewRes.item.fr2code_longdescription}" padding-start="0.5" id="z5z_6"/>
+                        </box>
+                      </box>
+                    </top>
+                  </border-layout>
+                </box>
+              </tab>
+              <!-- <tab label="solution" hidden="{page.state.pagechange==true}" id="x6kb_"/> -->
+            </tabs>
+          </box>
+        </box>
+      </box>
+    </page>
+    <page id="solution" title="Solution" controller="SolutionController">
+      <maximo-datasource pre-load="true" id="solutionDS" object-structure="CDUISRMSOLUTION" where="solution={page.params.id}">
+        <schema id="kwa7n">
+          <attribute name="*" unique-id="true" title=" " id="nv7_m"/>
+        </schema>
+      </maximo-datasource>
+      <maximo-datasource pre-load="false" id="cduiticketDS" object-structure="CDUITICKET">
+        <schema id="v2axn">
+          <attribute name="*" unique-id="true" title=" " id="a6958"/>
+        </schema>
+      </maximo-datasource>
+      <header-template enable-white-background="true" stack-breadcrumbs-with-tabs="true" show-current-page-in-bread-crumb="false" hide-breadcrumb="false" bread-crumb-icon-name="home" title="Solution {solutionDS.item.solution}" title-column-width="50" id="d6g8">
+        <menu-button slot="menu-button-action" id="menubutton8" size="lg" on-click="resetResolveData">
+          <menu-item id="menu8" on-click="applySolution" label="Apply solution"/>
+          <menu-item hidden="true" dialog="dismiss_solution" label="Dismiss" id="jme9"/>
+        </menu-button>
+        <button kind="primary" slot="buttons" label="Actions" id="x2jq8"/>
+      </header-template>
+      <dialogs id="bv32v">
+        <dialog id="dismiss_solution" size="sm" primary-action-text="Ok" secondary-action-text="Cancel" title="Confirm dismiss solution">
+          <box direction="column" padding-top="-1" id="d3v8w">
+            <box id="byw6p">
+              <field label="Solution ID" value="{solutionDS.item.solution}" show-help="false" id="k9jk_"/>
+            </box>
+            <box direction="column" id="adbvw">
+              <box padding-bottom="-.4" id="x_nm9">
+                <label theme="field" label="Symptoms" id="bj345"/>
+              </box>
+              <box class-name="fontrichtext" padding-top="-0.4" id="b233k">
+                <rich-text-viewer content-limit="200" stripped="true" content="{solutionDS.item.problemcode_longdescription}" id="ermpk"/>
+              </box>
+            </box>
+            <box direction="column" id="zr3pb">
+              <box padding-bottom="-.4" id="mgr33">
+                <label label="Cause" theme="field" id="d5373"/>
+              </box>
+              <box class-name="fontrichtext" padding-top="-0.4" id="kmayp">
+                <rich-text-viewer stripped="true" content="{solutionDS.item.fr1code_longdescription}" id="myj4p"/>
+              </box>
+            </box>
+          </box>
+        </dialog>
+      </dialogs>
+      <box direction="column" id="ep8">
+        <field label="Solution ID" show-help="false" field-class-name="14-regular" value="{solutionDS.item.solution}" id="d8z66"/>
+        <field label="Solution status" show-help="false" field-class-name="14-regular" value="{solutionDS.item.status}" id="ya79"/>
+        <box direction="column" id="wmmaa">
+          <box id="wz6e4">
+            <label theme="field" label="Symptoms" id="krvw2"/>
+          </box>
+          <box class-name="fontrichtext" padding-top="-0.4" id="gj8rb">
+            <rich-text-viewer content-limit="200" stripped="true" padding-start="0.5" content="{solutionDS.item.problemcode_longdescription}" id="vr9qy"/>
+          </box>
+          <box id="z77rp">
+            <label theme="field" label="Cause" id="e895v"/>
+          </box>
+          <box class-name="fontrichtext" padding-top="-0.4" id="ek8ev">
+            <rich-text-viewer stripped="true" content="{solutionDS.item.fr1code_longdescription}" padding-start="0.5" id="d78n5"/>
+          </box>
+          <box id="kj9m4">
+            <label theme="field" label="Resolution" id="a9e57"/>
+          </box>
+          <box class-name="fontrichtext" padding-top="-0.4" id="eg3we">
+            <rich-text-viewer stripped="true" content="{solutionDS.item.fr2code_longdescription}" padding-start="0.5" id="yme76"/>
+          </box>
+        </box>
+      </box>
+    </page>
+  </pages>
+  <messages id="wpdzw">
+    <message id="srstatus_APPFM" text="Approved by Fulfillment Manager"/>
+    <message id="srstatus_APPLM" text="Approved by Line Manager"/>
+    <message id="srstatus_approved" text="Approved"/>
+    <message id="srstatus_cancelled" text="Cancelled"/>
+    <message id="srstatus_closed" text="Closed"/>
+    <message id="srstatus_rejected" text="Rejected"/>
+    <message id="srstatus_draft" text="Draft"/>
+    <message id="srstatus_editedhistory" text="Edited in History"/>
+    <message id="srstatus_inprogress" text="In Progress"/>
+    <message id="srstatus_new" text="New"/>
+    <message id="srstatus_pending" text="Pending"/>
+    <message id="srstatus_queued" text="Queued"/>
+    <message id="srstatus_resolved" text="Resolved"/>
+    <message id="srstatus_slaHold" text="SLA Hold"/>
+    <message id="chat_session" text="Chat session"/>
+    <message id="email_to" text="Email to {0}"/>
+    <message id="email_from" text="Email from {0}"/>
+    <message id="subject" text="Subject: {0}"/>
+    <message id="owner_removed" text="Owner removed"/>
+    <message id="owner_removed_by" text="Owner {0} removed by  {1}"/>
+    <message id="owner_changed" text="Owner changed to {0}"/>
+    <message id="owner_changed_by" text="Owner changed to {0} by {1}"/>
+    <message id="owner_changed_from" text="Owner changed from {0} to {1} by {2}"/>
+    <message id="team_changed" text="Team changed to {0}"/>
+    <message id="team_changed_by" text="Team changed to {0} by {1}"/>
+    <message id="team_changed_from" text="Team changed from {0} to {1} by {2}"/>
+    <message id="ticket_created" text="Ticket {0} created"/>
+    <message id="ticket_created_by" text="Ticket {0} created by {1}"/>
+    <message id="request_created" text="Request {0} created"/>
+    <message id="request_created_by" text="Request created by {0}"/>
+    <message id="status_change" text="Status Change to {0}"/>
+    <message id="status_change_to" text="Status changed to {0} by {1}"/>
+    <message id="status_change_from" text="Status changed from {0} to {1} by {2}"/>
+    <message id="request_update_by" text="Request update by {0}"/>
+    <message id="comment_by" text="Comment by {0}"/>
+    <message id="comment_by_analyst" text="Comment by an ANALYST"/>
+    <message id="request_approved" text="Request approved"/>
+    <message id="approval_denied" text="Approval denied"/>
+    <message id="request_approved_by" text="Request approved by {0}"/>
+    <message id="approval_denied_by" text="Approval denied by {0}"/>
+    <message id="approval_request" text="Approval requested"/>
+    <message id="approval_required_from" text="Approval required from {0}"/>
+    <message id="error_title" text="Error loading log title"/>
+    <message id="error_check" text="Please check error log"/>
+    <message id="team_tickets" text="Open with team"/>
+    <message id="unassigned_tickets" text="Unassigned"/>
+    <message id="my_tickets" text="My incidents"/>
+    <message id="dashboard_add_tk__msg_failed" text="Add comment failed"/>
+    <message id="dashboard_add_tk__msg_success" text="Comment added successfully"/>
+    <message id="dashboard_my_ticket_status_success" text="Status changed successfully"/>
+    <message id="dashboard_my_ticket_status_failed" text="Change status failed"/>
+    <message id="dashboard_my_ticket_assign_success" text="Incident reassigned successfully"/>
+    <message id="dashboard_my_ticket_assign_failed" text="Incident reassign failed"/>
+    <message id="dashboard_my_ticket_changestatus_msg" text="Status changed from {0} to {1} by {2}."/>
+    <message id="ticket_details_assign_success" text="Took ownership successfully"/>
+    <message id="ticket_details_assign_failed" text="Take ownership failed"/>
+    <message id="resolved_ticket_details_dismissed_success" text="Incident dismissed successfully"/>
+    <message id="resolved_ticket_details_dismissed_failed" text="Incident dismiss failed"/>
+    <message id="my_tickets_count" text="My incidents"/>
+    <message id="unassigned_tickets_count" text="Unassigned"/>
+    <message id="tickets_open_with_my_team_count" text="Open with team"/>
+    <message id="incident" text="Incident"/>
+    <message id="change" text="Change"/>
+    <message id="problem" text="Problem"/>
+    <message id="since_last_week" text="% since last week"/>
+    <message id="total_incident" text="Total incidents"/>
+    <message id="no_change" text="No change"/>
+    <message id="minutes_ago" text="minutes ago"/>
+    <message id="hours_and" text="hours and"/>
+    <message id="days_ago" text="days ago"/>
+    <message id="today_at" text="Today at"/>
+    <message id="ticket_detail_is_global_yes" text="Yes"/>
+    <message id="ticket_detail_is_global_no" text="No"/>
+    <message id="set_as_global_success" text="Set as global successful Incident {0}"/>
+    <message id="set_as_global_failed" text="Set as global failed"/>
+    <message id="similarity" text="Similarity:"/>
+    <message id="error_html_not_allowed" text="Comments should not contain HTML, links, or symbols"/>
+  </messages>
+</maximo-application>
